@@ -1,4 +1,6 @@
 #pragma once
 
-void initialize_example_module();
-void uninitialize_example_module();
+#include <godot_cpp/core/class_db.hpp>
+
+void initialize_cmos_module(godot::ModuleInitializationLevel p_level);
+void uninitialize_cmos_module(godot::ModuleInitializationLevel p_level);

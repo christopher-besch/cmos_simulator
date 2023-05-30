@@ -1,9 +1,9 @@
 #include "register_types.h"
 
 #include "cmos.h"
+#include "scroll_camera.h"
 
 #include <gdextension_interface.h>
-#include <godot_cpp/core/class_db.hpp>
 #include <godot_cpp/core/defs.hpp>
 #include <godot_cpp/godot.hpp>
 
@@ -14,14 +14,13 @@ void initialize_cmos_module(ModuleInitializationLevel p_level)
     if(p_level != MODULE_INITIALIZATION_LEVEL_SCENE)
         return;
     ClassDB::register_class<CMOS>();
+    ClassDB::register_class<ScrollCamera>();
 }
-
 void uninitialize_cmos_module(ModuleInitializationLevel p_level)
 {
     if(p_level != MODULE_INITIALIZATION_LEVEL_SCENE)
         return;
 }
-
 extern "C" {
 GDExtensionBool GDE_EXPORT cmos_library_init(const GDExtensionInterface* p_interface, const GDExtensionClassLibraryPtr p_library, GDExtensionInitialization* r_initialization)
 {
