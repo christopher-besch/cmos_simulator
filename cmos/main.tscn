@@ -1,0 +1,11 @@
+[gd_scene load_steps=2 format=3 uid="uid://cmooylkwatc0p"]
+
+[ext_resource type="Texture2D" uid="uid://dvqnkss201018" path="res://icon.svg" id="1_tidc6"]
+
+[node name="Main" type="Node2D"]
+
+[node name="CMOS" type="CMOS" parent="."]
+amplitude = 400.0
+position = Vector2(177.668, 177.668)
+texture = ExtResource("1_tidc6")
+centered = false

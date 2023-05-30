@@ -1,0 +1,14 @@
+[
+    {
+        "command": "g++ -o src/cmos.os -c -std=c++17 -fPIC -Wwrite-strings -m64 -march=x86-64 -O2 -fPIC -DDEBUG_ENABLED -DDEBUG_METHODS_ENABLED -Igodot-cpp/gdextension -Igodot-cpp/include -Igodot-cpp/gen/include -Isrc src/cmos.cpp",
+        "directory": "/home/chris/godot/cmos",
+        "file": "src/cmos.cpp",
+        "output": "src/cmos.os"
+    },
+    {
+        "command": "g++ -o src/register_types.os -c -std=c++17 -fPIC -Wwrite-strings -m64 -march=x86-64 -O2 -fPIC -DDEBUG_ENABLED -DDEBUG_METHODS_ENABLED -Igodot-cpp/gdextension -Igodot-cpp/include -Igodot-cpp/gen/include -Isrc src/register_types.cpp",
+        "directory": "/home/chris/godot/cmos",
+        "file": "src/register_types.cpp",
+        "output": "src/register_types.os"
+    }
+]
