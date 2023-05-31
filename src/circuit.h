@@ -11,14 +11,15 @@
 #include <godot_cpp/classes/sub_viewport.hpp>
 #include <godot_cpp/variant/utility_functions.hpp>
 
-#include <vector>
+#include <set>
 
 namespace godot {
 
 enum class Tool : int {
     MOVE        = 0,
-    CREATE_NMOS = 1,
-    CREATE_PMOS = 2,
+    DELETE      = 1,
+    CREATE_NMOS = 2,
+    CREATE_PMOS = 3,
 };
 
 class Circuit: public Node2D {
@@ -28,7 +29,7 @@ private:
     SubViewport*            m_viewport;
     Ref<godot::PackedScene> m_nmos_scene;
     Ref<godot::PackedScene> m_pmos_scene;
-    std::vector<Part*>      m_parts {};
+    std::set<Part*>         m_parts {};
     Tool                    m_tool {Tool::MOVE};
 
 protected:
@@ -52,9 +53,11 @@ public:
     void _input(const Ref<InputEvent>& event) override;
 
 private:
-    void move_click(Vector2 mouse_pos);
+    void move_click(Vector2 pos);
 
-    void add_part(Ref<godot::PackedScene> scene, Vector2 mouse_pos);
+    Part* get_part(Vector2 pos);
+    void  add_part(Ref<godot::PackedScene> scene, Vector2 pos);
+    void  delete_part(Vector2 pos);
 };
 
 } // namespace godot

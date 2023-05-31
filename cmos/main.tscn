@@ -38,6 +38,12 @@ offset_top = 67.0
 offset_right = 762.0
 offset_bottom = 122.0
 
+[node name="DeleteButton" type="Button" parent="."]
+offset_left = 814.0
+offset_top = 72.0
+offset_right = 886.0
+offset_bottom = 127.0
+
 [node name="NMOSButton" type="Button" parent="."]
 offset_left = 666.0
 offset_top = 200.0

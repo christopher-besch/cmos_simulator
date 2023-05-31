@@ -29,7 +29,7 @@ void Circuit::_ready()
     for(int i {0}; i < children.size(); ++i) {
         Part* child = Object::cast_to<Part>(children[i]);
         if(child)
-            m_parts.push_back(child);
+            m_parts.insert(child);
     }
     m_viewport = get_node<SubViewport>("..");
 }
@@ -50,6 +50,9 @@ void Circuit::_input(const Ref<InputEvent>& event)
         case Tool::MOVE:
             move_click(mouse_pos);
             break;
+        case Tool::DELETE:
+            delete_part(mouse_pos);
+            break;
         case Tool::CREATE_NMOS:
             add_part(m_nmos_scene, mouse_pos);
             break;
@@ -60,22 +63,40 @@ void Circuit::_input(const Ref<InputEvent>& event)
     }
 }
 
-void Circuit::move_click(Vector2 mouse_pos)
+void Circuit::move_click(Vector2 pos)
 {
-    for(Part* part: m_parts) {
-        if(!part->is_inside(mouse_pos))
-            continue;
-        PRT("click part " << part->get_type());
-        Connector* connector = part->get_clicked_connector(mouse_pos);
-        if(connector)
-            PRT("click connector " << connector->get_type());
-    }
+    Part* part = get_part(pos);
+    if(!part)
+        return;
+    PRT("click part " << part->get_type());
+    Connector* connector = part->get_clicked_connector(pos);
+    if(connector)
+        PRT("click connector " << connector->get_type());
 }
 
-void Circuit::add_part(Ref<godot::PackedScene> scene, Vector2 mouse_pos)
+Part* Circuit::get_part(Vector2 pos)
 {
+    for(Part* part: m_parts)
+        if(part->is_inside(pos))
+            return part;
+    return nullptr;
+}
+
+void Circuit::add_part(Ref<godot::PackedScene> scene, Vector2 pos)
+{
+    if(get_part(pos))
+        return;
     Part* part = Object::cast_to<Part>(scene->instantiate());
     add_child(part);
-    m_parts.push_back(part);
-    part->set_position(mouse_pos);
+    m_parts.insert(part);
+    part->set_position(pos);
+}
+
+void Circuit::delete_part(Vector2 pos)
+{
+    Part* part = get_part(pos);
+    if(!part)
+        return;
+    m_parts.erase(part);
+    remove_child(part);
 }
