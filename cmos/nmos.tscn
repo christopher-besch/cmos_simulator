@@ -1,0 +1,25 @@
+[gd_scene load_steps=2 format=3 uid="uid://hu74s14k20iy"]
+
+[ext_resource type="Texture2D" uid="uid://cgp3hkwnw2kin" path="res://nmos.png" id="1_e2je8"]
+
+[node name="NMOS" type="Part"]
+type = 1
+
+[node name="Sprite" type="Sprite2D" parent="."]
+texture = ExtResource("1_e2je8")
+
+[node name="Source" type="Connector" parent="."]
+type = 1
+position = Vector2(72, 20)
+
+[node name="Drain" type="Connector" parent="."]
+type = 2
+position = Vector2(-72, 20)
+
+[node name="Gate" type="Connector" parent="."]
+type = 3
+position = Vector2(-57, -72)
+
+[node name="Bulk" type="Connector" parent="."]
+type = 4
+position = Vector2(1, 71)

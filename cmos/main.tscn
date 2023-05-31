@@ -1,36 +1,59 @@
-[gd_scene load_steps=4 format=3 uid="uid://cmooylkwatc0p"]
+[gd_scene load_steps=6 format=3 uid="uid://cmooylkwatc0p"]
 
-[ext_resource type="Texture2D" uid="uid://dvqnkss201018" path="res://icon.svg" id="1_tidc6"]
+[ext_resource type="PackedScene" uid="uid://hu74s14k20iy" path="res://nmos.tscn" id="1_b3f13"]
+[ext_resource type="Script" path="res://main.gd" id="1_sfg7y"]
+[ext_resource type="PackedScene" uid="uid://bykmkfb2b00ut" path="res://pmos.tscn" id="3_wvt5y"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_pcjcu"]
 
 [sub_resource type="QuadMesh" id="QuadMesh_q657h"]
 
 [node name="Main" type="Node2D"]
+script = ExtResource("1_sfg7y")
 
 [node name="SubViewportContainer" type="SubViewportContainer" parent="."]
-offset_right = 621.0
-offset_bottom = 640.0
+offset_top = 2.0
+offset_right = 620.0
+offset_bottom = 653.0
 stretch = true
-metadata/_edit_use_anchors_ = true
 
 [node name="SubViewport" type="SubViewport" parent="SubViewportContainer"]
 handle_input_locally = false
-size = Vector2i(621, 640)
+size = Vector2i(620, 651)
 render_target_update_mode = 4
 
+[node name="Circuit" type="Circuit" parent="SubViewportContainer/SubViewport"]
+
 [node name="ScrollCamera" type="ScrollCamera" parent="SubViewportContainer/SubViewport"]
-
-[node name="CMOS" type="CMOS" parent="SubViewportContainer/SubViewport"]
-
-[node name="Sprite2D" type="Sprite2D" parent="SubViewportContainer/SubViewport/CMOS"]
-texture = ExtResource("1_tidc6")
-centered = false
-
-[node name="Marker2D" type="Marker2D" parent="SubViewportContainer/SubViewport/CMOS"]
 
 [node name="MeshInstance2D" type="MeshInstance2D" parent="."]
 material = SubResource("ShaderMaterial_pcjcu")
 position = Vector2(896.5, 329)
 scale = Vector2(551, 660)
 mesh = SubResource("QuadMesh_q657h")
+
+[node name="MoveButton" type="Button" parent="."]
+offset_left = 690.0
+offset_top = 67.0
+offset_right = 762.0
+offset_bottom = 122.0
+
+[node name="NMOSButton" type="Button" parent="."]
+offset_left = 666.0
+offset_top = 200.0
+offset_right = 720.0
+offset_bottom = 260.0
+
+[node name="NMOS" parent="NMOSButton" instance=ExtResource("1_b3f13")]
+position = Vector2(30, 32)
+scale = Vector2(0.3, 0.3)
+
+[node name="PMOSButton" type="Button" parent="."]
+offset_left = 671.0
+offset_top = 300.0
+offset_right = 741.0
+offset_bottom = 372.0
+
+[node name="Part" parent="PMOSButton" instance=ExtResource("3_wvt5y")]
+position = Vector2(35, 37)
+scale = Vector2(0.3, 0.3)

@@ -1,6 +1,8 @@
 #include "register_types.h"
 
-#include "cmos.h"
+#include "circuit.h"
+#include "connector.h"
+#include "part.h"
 #include "scroll_camera.h"
 
 #include <gdextension_interface.h>
@@ -13,8 +15,10 @@ void initialize_cmos_module(ModuleInitializationLevel p_level)
 {
     if(p_level != MODULE_INITIALIZATION_LEVEL_SCENE)
         return;
-    ClassDB::register_class<CMOS>();
+    ClassDB::register_class<Part>();
     ClassDB::register_class<ScrollCamera>();
+    ClassDB::register_class<Connector>();
+    ClassDB::register_class<Circuit>();
 }
 void uninitialize_cmos_module(ModuleInitializationLevel p_level)
 {
