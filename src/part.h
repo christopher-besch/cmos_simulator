@@ -16,35 +16,28 @@ enum class PartType : int {
     PMOS = 2,
 };
 
-class Part: public Node2D {
+struct Part: public Node2D {
     GDCLASS(Part, Node2D)
 
-private:
-    std::vector<Connector*> m_connectors {};
-    PartType                m_type {PartType::NONE};
-    bool                    m_active {false};
-    Vector2                 m_size;
-    float                   m_min_dist_sqrd {40.0};
+    std::vector<Connector*> connectors {};
+    PartType                type {PartType::NONE};
+    Vector2                 size;
 
 protected:
-    static void _bind_methods();
+    static void _bind_methods()
+    {
+        BIND_ATR(Part, type, INT);
+    }
 
 public:
-    Part();
-    ~Part();
-
     int get_type() const
     {
-        return static_cast<int>(m_type);
+        return static_cast<int>(type);
     }
-    void set_type(int type)
+    void set_type(int p_type)
     {
-        m_type = static_cast<PartType>(type);
+        type = static_cast<PartType>(p_type);
     }
-    bool       is_inside(Vector2 pos) const;
-    Connector* get_clicked_connector(Vector2 pos);
-
-    void _ready() override;
 };
 
 } // namespace godot

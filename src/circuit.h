@@ -12,6 +12,7 @@
 #include <godot_cpp/variant/utility_functions.hpp>
 
 #include <set>
+#include <unordered_map>
 
 namespace godot {
 
@@ -26,14 +27,19 @@ class Circuit: public Node2D {
     GDCLASS(Circuit, Node2D)
 
 private:
-    SubViewport*            m_viewport;
-    Ref<godot::PackedScene> m_nmos_scene;
-    Ref<godot::PackedScene> m_pmos_scene;
-    std::set<Part*>         m_parts {};
-    Tool                    m_tool {Tool::MOVE};
+    SubViewport*                                  m_viewport;
+    Ref<godot::PackedScene>                       m_nmos_scene;
+    Ref<godot::PackedScene>                       m_pmos_scene;
+    std::set<Part*>                               m_parts;
+    Tool                                          m_tool {Tool::MOVE};
+    float                                         m_grid_size {20};
+    std::unordered_multimap<uint64_t, Connector*> m_connectors;
 
 protected:
-    static void _bind_methods();
+    static void _bind_methods()
+    {
+        BIND_ATR(Circuit, tool, INT);
+    }
 
 public:
     Circuit();
@@ -53,11 +59,16 @@ public:
     void _input(const Ref<InputEvent>& event) override;
 
 private:
+    Vector2i get_grid_pos(Vector2 pos) const;
+    uint64_t get_con_key(Vector2i pos) const;
+    Vector2i get_pos_from_con_key(uint64_t key) const;
+    bool     is_part_clicked(Part* part, Vector2 pos) const;
+    Part*    get_part(Vector2 pos);
+
     void move_click(Vector2 pos);
 
-    Part* get_part(Vector2 pos);
-    void  add_part(Ref<godot::PackedScene> scene, Vector2 pos);
-    void  delete_part(Vector2 pos);
+    void add_part(Ref<godot::PackedScene> scene, Vector2 pos);
+    void delete_part(Vector2 pos);
 };
 
 } // namespace godot

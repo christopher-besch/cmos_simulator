@@ -1,25 +1,25 @@
 [gd_scene load_steps=2 format=3 uid="uid://bykmkfb2b00ut"]
 
-[ext_resource type="Texture2D" uid="uid://cthc54cdvfxhe" path="res://pmos.png" id="1_mlqfh"]
+[ext_resource type="Texture2D" uid="uid://24dbkpsd2dih" path="res://pmos2.png" id="1_vvr3r"]
 
 [node name="Part" type="Part"]
 type = 2
 
 [node name="Sprite" type="Sprite2D" parent="."]
-texture = ExtResource("1_mlqfh")
+texture = ExtResource("1_vvr3r")
 
 [node name="Source" type="Connector" parent="."]
 type = 1
-position = Vector2(72, -36)
+position = Vector2(120, -60)
 
 [node name="Drain" type="Connector" parent="."]
 type = 2
-position = Vector2(-72, -36)
+position = Vector2(-120, -60)
 
 [node name="Gate" type="Connector" parent="."]
 type = 3
-position = Vector2(-58, 71)
+position = Vector2(-100, 100)
 
 [node name="Bulk" type="Connector" parent="."]
 type = 4
-position = Vector2(0, -71)
+position = Vector2(0, -100)

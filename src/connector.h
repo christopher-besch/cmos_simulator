@@ -15,26 +15,28 @@ enum class ConnectorType : int {
     Bulk   = 4,
 };
 
-class Connector: public Node2D {
+struct Part;
+
+struct Connector: public Node2D {
     GDCLASS(Connector, Node2D)
 
-private:
-    ConnectorType m_type {ConnectorType::NONE};
+    ConnectorType type {ConnectorType::NONE};
+    Part*         part {nullptr};
 
 protected:
-    static void _bind_methods();
+    static void _bind_methods()
+    {
+        BIND_ATR(Connector, type, INT);
+    }
 
 public:
-    Connector();
-    ~Connector();
-
     int get_type() const
     {
-        return static_cast<int>(m_type);
+        return static_cast<int>(type);
     }
-    void set_type(int type)
+    void set_type(int p_type)
     {
-        m_type = static_cast<ConnectorType>(type);
+        type = static_cast<ConnectorType>(p_type);
     }
 };
 
