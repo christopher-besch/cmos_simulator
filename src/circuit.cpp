@@ -29,11 +29,16 @@ void Circuit::_ready()
         if(child)
             m_parts.insert(child);
     }
-    m_viewport = get_node<SubViewport>("..");
 }
 
 void Circuit::_process(double delta)
 {
+    if(m_moving_part) {
+        Vector2 new_pos = to_grid_pos(get_local_mouse_position() - m_moving_part_grab);
+        Vector2 delta   = m_moving_part->get_position();
+        m_moving_part->set_position(new_pos);
+        // TODO: move connectors
+    }
 }
 
 void Circuit::_input(const Ref<InputEvent>& event)
@@ -45,9 +50,20 @@ void Circuit::_input(const Ref<InputEvent>& event)
     if(event->is_action_pressed("click")) {
         Vector2 mouse_pos = get_local_mouse_position();
         switch(m_tool) {
-        case Tool::MOVE:
-            move_click(mouse_pos);
-            break;
+        case Tool::MOVE: {
+            prt(to_grid_pos(mouse_pos));
+            auto [itr, range_end] = m_connectors.equal_range(to_grid_pos(mouse_pos));
+            if(itr != range_end)
+                for(; itr != range_end; ++itr)
+                    PRT("click connector " << itr->second->get_parent() << " " << static_cast<int>(itr->second->type));
+            else {
+                Part* part = get_part(mouse_pos);
+                if(part) {
+                    m_moving_part      = part;
+                    m_moving_part_grab = part->get_local_mouse_position();
+                }
+            }
+        } break;
         case Tool::DELETE:
             delete_part(mouse_pos);
             break;
@@ -59,19 +75,13 @@ void Circuit::_input(const Ref<InputEvent>& event)
             break;
         }
     }
+    else if(event->is_action_released("click") && m_tool == Tool::MOVE)
+        m_moving_part = nullptr;
 }
 
-Vector2i Circuit::get_grid_pos(Vector2 pos) const
+Vector2i Circuit::to_grid_pos(Vector2i pos) const
 {
-    return Vector2i((pos + Vector2(0.5 * m_grid_size, 0.5 * m_grid_size)) / m_grid_size) * m_grid_size;
-}
-uint64_t Circuit::get_con_key(Vector2i pos) const
-{
-    return static_cast<uint64_t>(static_cast<uint32_t>(pos.x)) | static_cast<uint64_t>(static_cast<uint32_t>(pos.y)) << 32;
-}
-Vector2i Circuit::get_pos_from_con_key(uint64_t key) const
-{
-    return Vector2i(static_cast<uint32_t>(key), static_cast<uint32_t>(key >> 32));
+    return Vector2i(pos / m_grid_size) * m_grid_size;
 }
 
 bool Circuit::is_part_clicked(Part* part, Vector2 pos) const
@@ -93,23 +103,13 @@ Part* Circuit::get_part(Vector2 pos)
     return nullptr;
 }
 
-void Circuit::move_click(Vector2 pos)
-{
-    Part* part = get_part(pos);
-    if(part)
-        PRT("click part " << part->get_type());
-
-    prt(get_grid_pos(pos));
-    for(auto [itr, range_end] = m_connectors.equal_range(get_con_key(get_grid_pos(pos))); itr != range_end; ++itr)
-        PRT("click connector " << itr->second->part);
-}
-
 void Circuit::add_part(Ref<godot::PackedScene> scene, Vector2 pos)
 {
     if(get_part(pos))
         return;
     Part* part = Object::cast_to<Part>(scene->instantiate());
-    part->set_position(get_grid_pos(pos));
+    part->set_position(to_grid_pos(pos));
+    add_child(part);
 
     part->size    = part->get_node<Sprite2D>("Sprite")->get_texture()->get_size();
     auto children = part->get_children();
@@ -117,14 +117,28 @@ void Circuit::add_part(Ref<godot::PackedScene> scene, Vector2 pos)
         Connector* connector = Object::cast_to<Connector>(children[i]);
         if(!connector)
             continue;
-        connector->part = part;
         part->connectors.push_back(connector);
-        uint64_t con_key = get_con_key(part->get_position() + connector->get_position());
-        m_connectors.insert({con_key, connector});
+
+        Node2D* parent = Object::cast_to<Node2D>(connector->get_parent());
+        prt(parent->get_position() + connector->get_position());
+        prt(to_local(connector->get_global_position()));
         prt(part->get_position() + connector->get_position());
+        prt(to_grid_pos(part->get_position() + connector->get_position()));
+
+        auto [itra, enda] = m_connectors.equal_range(connector);
+        if(itra == enda)
+            PRT("buh");
+        else
+            PRT("yay");
+        m_connectors.insert(connector);
+
+        auto [itr, end] = m_connectors.equal_range(connector);
+        if(itr == end)
+            PRT("buh");
+        else
+            PRT("yay");
     }
 
-    add_child(part);
     m_parts.insert(part);
 }
 
@@ -136,11 +150,7 @@ void Circuit::delete_part(Vector2 pos)
 
     m_parts.erase(part);
 
-    for(Connector* connector: part->connectors) {
-        uint64_t con_key = get_con_key(part->get_position() + connector->get_position());
-        for(auto [itr, range_end] = m_connectors.equal_range(con_key); itr != range_end; ++itr)
-            if(itr->second == connector)
-                m_connectors.erase(itr);
-    }
+    for(Connector* connector: part->connectors)
+        m_connectors.erase(connector);
     remove_child(part);
 }

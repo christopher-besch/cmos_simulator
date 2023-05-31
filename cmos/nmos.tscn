@@ -10,16 +10,16 @@ texture = ExtResource("1_r2em4")
 
 [node name="Source" type="Connector" parent="."]
 type = 1
-position = Vector2(120, -60)
+position = Vector2(140, -60)
 
 [node name="Drain" type="Connector" parent="."]
 type = 2
-position = Vector2(-120, -60)
+position = Vector2(-140, -60)
 
 [node name="Gate" type="Connector" parent="."]
 type = 3
-position = Vector2(-100, 100)
+position = Vector2(-100, 120)
 
 [node name="Bulk" type="Connector" parent="."]
 type = 4
-position = Vector2(0, -100)
+position = Vector2(0, -120)

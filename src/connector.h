@@ -15,13 +15,10 @@ enum class ConnectorType : int {
     Bulk   = 4,
 };
 
-struct Part;
-
 struct Connector: public Node2D {
     GDCLASS(Connector, Node2D)
 
     ConnectorType type {ConnectorType::NONE};
-    Part*         part {nullptr};
 
 protected:
     static void _bind_methods()
