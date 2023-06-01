@@ -41,6 +41,7 @@ public:
     }
     void add_connector(Connector* con)
     {
+        con->for_part = true;
         connectors.push_back(con);
     }
 };

@@ -1,10 +1,10 @@
 #include "circuit.h"
-#include "godot_cpp/variant/variant.hpp"
+#include "cable.h"
 #include "helper.h"
 
-#include <godot_cpp/classes/button.hpp>
 #include <godot_cpp/classes/engine.hpp>
 #include <godot_cpp/classes/input.hpp>
+#include <godot_cpp/classes/line2d.hpp>
 #include <godot_cpp/classes/resource_loader.hpp>
 #include <godot_cpp/classes/sprite2d.hpp>
 
@@ -17,6 +17,7 @@ Circuit::Circuit()
     ResourceLoader* relo = ResourceLoader::get_singleton();
     m_nmos_scene         = relo->load("res://nmos.tscn");
     m_pmos_scene         = relo->load("res://pmos.tscn");
+    m_cable_scene        = relo->load("res://cable.tscn");
 }
 Circuit::~Circuit()
 {
@@ -29,15 +30,17 @@ void Circuit::_ready()
 void Circuit::_process(double delta)
 {
     if(m_moving_part) {
-        Vector2 new_pos = to_grid_pos(get_local_mouse_position() - m_moving_part_grab);
-        Vector2 delta   = new_pos - m_moving_part->get_position();
-        if(delta == Vector2i(0, 0))
-            return;
-        for(Connector* connector: m_moving_part->connectors)
-            m_connectors.erase(connector);
-        m_moving_part->set_position(new_pos);
-        for(Connector* connector: m_moving_part->connectors)
-            m_connectors.insert(connector);
+        Vector2i new_pos = to_grid_pos(get_local_mouse_position() - m_moving_part_grab);
+        move_part(m_moving_part, new_pos);
+    }
+    else if(m_new_cable) {
+        Vector2i delta = to_grid_pos(get_local_mouse_position()) - m_new_cable->get_position();
+        if(abs(delta.x) > abs(delta.y))
+            delta = Vector2i(delta.x, 0);
+        else
+            delta = Vector2i(0, delta.y);
+        m_new_cable->set_point_position(1, delta);
+        m_new_cable->connector_end->set_position(delta);
     }
 }
 
@@ -52,9 +55,11 @@ void Circuit::_input(const Ref<InputEvent>& event)
         switch(m_tool) {
         case Tool::MOVE: {
             auto [itr, range_end] = m_connectors.equal_range_square(to_grid_pos(mouse_pos), m_grid_size);
-            if(itr != range_end)
-                for(; itr != range_end; ++itr)
-                    PRT("click connector " << itr->second->get_parent() << " " << static_cast<int>(itr->second->type));
+            if(itr != range_end) {
+                m_new_cable = Object::cast_to<Cable>(m_cable_scene->instantiate());
+                m_new_cable->set_position(itr->second->get_circuit_pos());
+                add_child(m_new_cable);
+            }
             else {
                 Part* part = get_part(mouse_pos);
                 if(part) {
@@ -74,8 +79,20 @@ void Circuit::_input(const Ref<InputEvent>& event)
             break;
         }
     }
-    else if(event->is_action_released("click") && m_tool == Tool::MOVE)
+    else if(event->is_action_released("click") && m_tool == Tool::MOVE) {
+        if(m_new_cable) {
+            if(m_new_cable->get_point_position(1) == Vector2i(0, 0)) {
+                remove_child(m_new_cable);
+                m_new_cable->queue_free();
+            }
+            else {
+                m_connectors.insert(m_new_cable->connector_origin);
+                m_connectors.insert(m_new_cable->connector_end);
+            }
+        }
+        m_new_cable   = nullptr;
         m_moving_part = nullptr;
+    }
 }
 
 Vector2i Circuit::to_grid_pos(Vector2i pos) const
@@ -127,4 +144,20 @@ void Circuit::delete_part(Vector2 pos)
     for(Connector* connector: part->connectors)
         m_connectors.erase(connector);
     remove_child(part);
+    part->queue_free();
+}
+
+void Circuit::move_part(Part* part, Vector2i new_pos)
+{
+    if(new_pos == part->get_position())
+        return;
+    for(Connector* connector: part->connectors)
+        m_connectors.erase(connector);
+    part->set_position(new_pos);
+    for(Connector* connector: part->connectors)
+        m_connectors.insert(connector);
+}
+
+void Circuit::delete_cable(Vector2 pos)
+{
 }

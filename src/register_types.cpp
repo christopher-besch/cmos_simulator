@@ -1,5 +1,6 @@
 #include "register_types.h"
 
+#include "cable.h"
 #include "circuit.h"
 #include "connector.h"
 #include "part.h"
@@ -15,10 +16,11 @@ void initialize_cmos_module(ModuleInitializationLevel p_level)
 {
     if(p_level != MODULE_INITIALIZATION_LEVEL_SCENE)
         return;
-    ClassDB::register_class<Part>();
     ClassDB::register_class<ScrollCamera>();
-    ClassDB::register_class<Connector>();
     ClassDB::register_class<Circuit>();
+    ClassDB::register_class<Part>();
+    ClassDB::register_class<Cable>();
+    ClassDB::register_class<Connector>();
 }
 void uninitialize_cmos_module(ModuleInitializationLevel p_level)
 {

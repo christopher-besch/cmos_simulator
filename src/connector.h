@@ -1,5 +1,6 @@
 #pragma once
 
+#include "godot_cpp/classes/object.hpp"
 #include "helper.h"
 #include <godot_cpp/classes/input_event.hpp>
 #include <godot_cpp/classes/marker2d.hpp>
@@ -19,6 +20,8 @@ struct Connector: public Marker2D {
     GDCLASS(Connector, Node2D)
 
     ConnectorType type {ConnectorType::NONE};
+    bool          for_part {false};
+    bool          for_cable {false};
 
 protected:
     static void _bind_methods()
@@ -34,6 +37,10 @@ public:
     void set_type(int p_type)
     {
         type = static_cast<ConnectorType>(p_type);
+    }
+    Vector2i get_circuit_pos() const
+    {
+        return Object::cast_to<Node2D>(get_parent())->get_position() + get_position();
     }
 };
 
