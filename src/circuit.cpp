@@ -68,9 +68,17 @@ void Circuit::_input(const Ref<InputEvent>& event)
                 }
             }
         } break;
-        case Tool::DELETE:
-            delete_part(mouse_pos);
+        case Tool::DELETE: {
+            Part* part = get_part(mouse_pos);
+            if(part) {
+                delete_part(part);
+                break;
+            }
+            Cable* cable = get_cable(mouse_pos);
+            if(cable)
+                delete_cable(cable);
             break;
+        }
         case Tool::CREATE_NMOS:
             add_part(m_nmos_scene, mouse_pos);
             break;
@@ -86,6 +94,7 @@ void Circuit::_input(const Ref<InputEvent>& event)
                 m_new_cable->queue_free();
             }
             else {
+                m_cables.insert(m_new_cable);
                 m_connectors.insert(m_new_cable->connector_origin);
                 m_connectors.insert(m_new_cable->connector_end);
             }
@@ -110,12 +119,44 @@ bool Circuit::is_part_clicked(Part* part, Vector2 pos) const
         return false;
     return true;
 }
+bool Circuit::is_cable_clicked(Cable* cable, Vector2 pos) const
+{
+    Vector2i cable_pos       = cable->get_position();
+    Vector2i end_point_local = cable->get_point_position(1);
+    Vector2i end_point       = cable_pos + end_point_local;
+
+    Vector2 upper_left;
+    Vector2 bottom_right;
+    if(end_point.x > cable_pos.x || end_point.y > cable_pos.y) {
+        upper_left   = cable_pos;
+        bottom_right = end_point;
+    }
+    else {
+        upper_left   = end_point;
+        bottom_right = cable_pos;
+    }
+    upper_left -= Vector2(m_grid_size, m_grid_size);
+    bottom_right += Vector2(m_grid_size, m_grid_size);
+
+    if(pos.x < upper_left.x || pos.y < upper_left.y)
+        return false;
+    if(pos.x > bottom_right.x || pos.y > bottom_right.y)
+        return false;
+    return true;
+}
 
 Part* Circuit::get_part(Vector2 pos)
 {
     for(Part* part: m_parts)
         if(is_part_clicked(part, pos))
             return part;
+    return nullptr;
+}
+Cable* Circuit::get_cable(Vector2 pos)
+{
+    for(Cable* cable: m_cables)
+        if(is_cable_clicked(cable, pos))
+            return cable;
     return nullptr;
 }
 
@@ -133,12 +174,8 @@ void Circuit::add_part(Ref<godot::PackedScene> scene, Vector2 pos)
     m_parts.insert(part);
 }
 
-void Circuit::delete_part(Vector2 pos)
+void Circuit::delete_part(Part* part)
 {
-    Part* part = get_part(pos);
-    if(!part)
-        return;
-
     m_parts.erase(part);
 
     for(Connector* connector: part->connectors)
@@ -158,6 +195,11 @@ void Circuit::move_part(Part* part, Vector2i new_pos)
         m_connectors.insert(connector);
 }
 
-void Circuit::delete_cable(Vector2 pos)
+void Circuit::delete_cable(Cable* cable)
 {
+    m_cables.erase(cable);
+    m_connectors.erase(cable->connector_origin);
+    m_connectors.erase(cable->connector_end);
+    remove_child(cable);
+    cable->queue_free();
 }
