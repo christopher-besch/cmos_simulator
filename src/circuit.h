@@ -51,7 +51,6 @@ public:
     }
     void set_tool(int tool)
     {
-        PRT(m_connectors.size());
         m_tool = static_cast<Tool>(tool);
     }
 

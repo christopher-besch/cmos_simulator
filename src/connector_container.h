@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 #include <unordered_map>
+#include <vector>
 
 namespace godot {
 
@@ -38,6 +39,9 @@ public:
     {
         return m_connectors.size();
     }
+    std::pair<std::unordered_multimap<Vector2i, Connector*, Vector2iHash>::iterator,
+              std::unordered_multimap<Vector2i, Connector*, Vector2iHash>::iterator>
+        equal_range_square(Vector2i pos, int grid_size);
 
 private:
     Vector2i to_pos(Connector* connector);

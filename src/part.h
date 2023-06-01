@@ -27,6 +27,7 @@ protected:
     static void _bind_methods()
     {
         BIND_ATR(Part, type, INT);
+        godot::ClassDB::bind_method(D_METHOD("add_connector", "connector"), &Part::add_connector);
     }
 
 public:
@@ -37,6 +38,10 @@ public:
     void set_type(int p_type)
     {
         type = static_cast<PartType>(p_type);
+    }
+    void add_connector(Connector* con)
+    {
+        connectors.push_back(con);
     }
 };
 

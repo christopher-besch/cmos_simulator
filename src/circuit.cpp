@@ -1,4 +1,5 @@
 #include "circuit.h"
+#include "godot_cpp/variant/variant.hpp"
 #include "helper.h"
 
 #include <godot_cpp/classes/button.hpp>
@@ -23,21 +24,20 @@ Circuit::~Circuit()
 
 void Circuit::_ready()
 {
-    auto children = get_children();
-    for(int i {0}; i < children.size(); ++i) {
-        Part* child = Object::cast_to<Part>(children[i]);
-        if(child)
-            m_parts.insert(child);
-    }
 }
 
 void Circuit::_process(double delta)
 {
     if(m_moving_part) {
         Vector2 new_pos = to_grid_pos(get_local_mouse_position() - m_moving_part_grab);
-        Vector2 delta   = m_moving_part->get_position();
+        Vector2 delta   = new_pos - m_moving_part->get_position();
+        if(delta == Vector2i(0, 0))
+            return;
+        for(Connector* connector: m_moving_part->connectors)
+            m_connectors.erase(connector);
         m_moving_part->set_position(new_pos);
-        // TODO: move connectors
+        for(Connector* connector: m_moving_part->connectors)
+            m_connectors.insert(connector);
     }
 }
 
@@ -51,8 +51,7 @@ void Circuit::_input(const Ref<InputEvent>& event)
         Vector2 mouse_pos = get_local_mouse_position();
         switch(m_tool) {
         case Tool::MOVE: {
-            prt(to_grid_pos(mouse_pos));
-            auto [itr, range_end] = m_connectors.equal_range(to_grid_pos(mouse_pos));
+            auto [itr, range_end] = m_connectors.equal_range_square(to_grid_pos(mouse_pos), m_grid_size);
             if(itr != range_end)
                 for(; itr != range_end; ++itr)
                     PRT("click connector " << itr->second->get_parent() << " " << static_cast<int>(itr->second->type));
@@ -111,34 +110,9 @@ void Circuit::add_part(Ref<godot::PackedScene> scene, Vector2 pos)
     part->set_position(to_grid_pos(pos));
     add_child(part);
 
-    part->size    = part->get_node<Sprite2D>("Sprite")->get_texture()->get_size();
-    auto children = part->get_children();
-    for(int i {0}; i < children.size(); ++i) {
-        Connector* connector = Object::cast_to<Connector>(children[i]);
-        if(!connector)
-            continue;
-        part->connectors.push_back(connector);
-
-        Node2D* parent = Object::cast_to<Node2D>(connector->get_parent());
-        prt(parent->get_position() + connector->get_position());
-        prt(to_local(connector->get_global_position()));
-        prt(part->get_position() + connector->get_position());
-        prt(to_grid_pos(part->get_position() + connector->get_position()));
-
-        auto [itra, enda] = m_connectors.equal_range(connector);
-        if(itra == enda)
-            PRT("buh");
-        else
-            PRT("yay");
+    part->size = part->get_node<Sprite2D>("Sprite")->get_texture()->get_size();
+    for(Connector* connector: part->connectors)
         m_connectors.insert(connector);
-
-        auto [itr, end] = m_connectors.equal_range(connector);
-        if(itr == end)
-            PRT("buh");
-        else
-            PRT("yay");
-    }
-
     m_parts.insert(part);
 }
 

@@ -31,3 +31,55 @@ Vector2i ConnectorContainer::to_pos(Connector* connector)
     Node2D* parent = Object::cast_to<Node2D>(connector->get_parent());
     return parent->get_position() + connector->get_position();
 }
+
+std::pair<std::unordered_multimap<Vector2i, Connector*, Vector2iHash>::iterator,
+          std::unordered_multimap<Vector2i, Connector*, Vector2iHash>::iterator>
+    ConnectorContainer::equal_range_square(Vector2i pos, int grid_size)
+{
+    {
+        auto [itr, end] = equal_range(pos + Vector2i(0, 0));
+        if(itr != end)
+            return {itr, end};
+    }
+    {
+        auto [itr, end] = equal_range(pos + Vector2i(0, grid_size));
+        if(itr != end)
+            return {itr, end};
+    }
+    {
+        auto [itr, end] = equal_range(pos + Vector2i(0, -grid_size));
+        if(itr != end)
+            return {itr, end};
+    }
+    {
+        auto [itr, end] = equal_range(pos + Vector2i(grid_size, 0));
+        if(itr != end)
+            return {itr, end};
+    }
+    {
+        auto [itr, end] = equal_range(pos + Vector2i(grid_size, grid_size));
+        if(itr != end)
+            return {itr, end};
+    }
+    {
+        auto [itr, end] = equal_range(pos + Vector2i(grid_size, -grid_size));
+        if(itr != end)
+            return {itr, end};
+    }
+    {
+        auto [itr, end] = equal_range(pos + Vector2i(-grid_size, 0));
+        if(itr != end)
+            return {itr, end};
+    }
+    {
+        auto [itr, end] = equal_range(pos + Vector2i(-grid_size, grid_size));
+        if(itr != end)
+            return {itr, end};
+    }
+    {
+        auto [itr, end] = equal_range(pos + Vector2i(-grid_size, -grid_size));
+        if(itr != end)
+            return {itr, end};
+    }
+    return {m_connectors.end(), m_connectors.end()};
+}

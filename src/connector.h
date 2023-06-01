@@ -2,7 +2,7 @@
 
 #include "helper.h"
 #include <godot_cpp/classes/input_event.hpp>
-#include <godot_cpp/classes/node2d.hpp>
+#include <godot_cpp/classes/marker2d.hpp>
 
 namespace godot {
 
@@ -15,7 +15,7 @@ enum class ConnectorType : int {
     Bulk   = 4,
 };
 
-struct Connector: public Node2D {
+struct Connector: public Marker2D {
     GDCLASS(Connector, Node2D)
 
     ConnectorType type {ConnectorType::NONE};
