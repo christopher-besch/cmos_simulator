@@ -1,7 +1,6 @@
 #pragma once
 
 #include "cable.h"
-#include "connector.h"
 #include "connector_container.h"
 #include "helper.h"
 #include "part.h"
@@ -27,17 +26,16 @@ class Circuit: public Node2D {
     GDCLASS(Circuit, Node2D)
 
 private:
-    Ref<godot::PackedScene>    m_nmos_scene;
-    Ref<godot::PackedScene>    m_pmos_scene;
-    Ref<godot::PackedScene>    m_cable_scene;
-    std::unordered_set<Part*>  m_parts;
-    std::unordered_set<Cable*> m_cables;
-    ConnectorContainer         m_connectors;
-    Tool                       m_tool {Tool::MOVE};
-    Part*                      m_moving_part {nullptr};
-    Vector2                    m_moving_part_grab;
-    Cable*                     m_new_cable {nullptr};
-    int                        m_grid_size {20};
+    Ref<godot::PackedScene>   m_nmos_scene;
+    Ref<godot::PackedScene>   m_pmos_scene;
+    Ref<godot::PackedScene>   m_cable_scene;
+    std::unordered_set<Part*> m_parts;
+    ConnectorContainer        m_connectors;
+    Tool                      m_tool {Tool::MOVE};
+    Part*                     m_moving_part {nullptr};
+    Vector2                   m_moving_part_grab;
+    Cable*                    m_new_cable {nullptr};
+    int                       m_grid_size {20};
 
 protected:
     static void _bind_methods()
@@ -65,15 +63,16 @@ public:
 private:
     Vector2i to_grid_pos(Vector2i pos) const;
 
-    bool   is_part_clicked(Part* part, Vector2 pos) const;
-    bool   is_cable_clicked(Cable* part, Vector2 pos) const;
-    Part*  get_part(Vector2 pos);
-    Cable* get_cable(Vector2 pos);
+    bool  is_part_clicked(Part* part, Vector2 pos) const;
+    Part* get_part(Vector2 pos);
 
     void add_part(Ref<godot::PackedScene> scene, Vector2 pos);
     void delete_part(Part* part);
     void move_part(Part* part, Vector2i new_pos);
 
+    void track_cable(Cable* cable);
+    void untrack_cable(Cable* cable);
+    void add_cable(Cable* cable);
     void delete_cable(Cable* cable);
 };
 

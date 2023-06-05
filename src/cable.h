@@ -1,6 +1,5 @@
 #pragma once
 
-#include "connector.h"
 #include "helper.h"
 
 #include <godot_cpp/classes/input_event.hpp>
@@ -12,29 +11,35 @@
 
 namespace godot {
 
+enum class ConnectorType : int {
+    NONE = 0,
+    // nmos & pmos
+    Source = 1,
+    Drain  = 2,
+    Gate   = 3,
+    Bulk   = 4,
+};
+
 struct Cable: public Line2D {
     GDCLASS(Cable, Line2D)
 
-    Connector* connector_origin;
-    Connector* connector_end;
+    ConnectorType type {ConnectorType::NONE};
+    bool          for_part {false};
 
 protected:
     static void _bind_methods()
     {
-        godot::ClassDB::bind_method(D_METHOD("set_connector_origin", "connector"), &Cable::set_connector_origin);
-        godot::ClassDB::bind_method(D_METHOD("set_connector_end", "connector"), &Cable::set_connector_end);
+        BIND_ATR(Cable, type, INT);
     }
 
 public:
-    void set_connector_origin(Connector* con)
+    int get_type() const
     {
-        con->for_part    = true;
-        connector_origin = con;
+        return static_cast<int>(type);
     }
-    void set_connector_end(Connector* con)
+    void set_type(int p_type)
     {
-        con->for_part = true;
-        connector_end = con;
+        type = static_cast<ConnectorType>(p_type);
     }
 };
 

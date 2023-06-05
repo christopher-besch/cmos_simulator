@@ -1,8 +1,6 @@
 #include "register_types.h"
 
-#include "cable.h"
 #include "circuit.h"
-#include "connector.h"
 #include "part.h"
 #include "scroll_camera.h"
 
@@ -20,7 +18,6 @@ void initialize_cmos_module(ModuleInitializationLevel p_level)
     ClassDB::register_class<Circuit>();
     ClassDB::register_class<Part>();
     ClassDB::register_class<Cable>();
-    ClassDB::register_class<Connector>();
 }
 void uninitialize_cmos_module(ModuleInitializationLevel p_level)
 {

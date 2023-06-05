@@ -1,6 +1,6 @@
 #pragma once
 
-#include "connector.h"
+#include "cable.h"
 #include "helper.h"
 #include <vector>
 
@@ -19,15 +19,15 @@ enum class PartType : int {
 struct Part: public Node2D {
     GDCLASS(Part, Node2D)
 
-    std::vector<Connector*> connectors {};
-    PartType                type {PartType::NONE};
-    Vector2                 size;
+    std::vector<Cable*> cables {};
+    PartType            type {PartType::NONE};
+    Vector2             size;
 
 protected:
     static void _bind_methods()
     {
         BIND_ATR(Part, type, INT);
-        godot::ClassDB::bind_method(D_METHOD("add_connector", "connector"), &Part::add_connector);
+        godot::ClassDB::bind_method(D_METHOD("add_cable", "cable"), &Part::add_cable);
     }
 
 public:
@@ -39,10 +39,10 @@ public:
     {
         type = static_cast<PartType>(p_type);
     }
-    void add_connector(Connector* con)
+    void add_cable(Cable* cable)
     {
-        con->for_part = true;
-        connectors.push_back(con);
+        cables.push_back(cable);
+        cable->for_part = true;
     }
 };
 
