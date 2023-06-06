@@ -11,6 +11,8 @@
 
 namespace godot {
 
+struct Part;
+
 enum class ConnectorType : int {
     NONE = 0,
     // nmos & pmos
@@ -24,7 +26,7 @@ struct Cable: public Line2D {
     GDCLASS(Cable, Line2D)
 
     ConnectorType type {ConnectorType::NONE};
-    bool          for_part {false};
+    Part*         for_part {nullptr};
 
 protected:
     static void _bind_methods()

@@ -1,5 +1,6 @@
 [gd_scene format=3 uid="uid://dyolp4r4yncx5"]
 
 [node name="Cable" type="Cable"]
-points = PackedVector2Array(0, 0, 180, 0)
+points = PackedVector2Array(0, 0, 160, 0)
+width = 12.0
 default_color = Color(0, 0, 0, 1)

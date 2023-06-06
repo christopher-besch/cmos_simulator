@@ -43,17 +43,17 @@ std::pair<std::unordered_multimap<Vector2i, Cable*, Vector2iHash>::iterator,
             return {itr, end};
     }
     {
+        auto [itr, end] = equal_range(pos + Vector2i(-grid_size, 0));
+        if(itr != end)
+            return {itr, end};
+    }
+    {
         auto [itr, end] = equal_range(pos + Vector2i(grid_size, grid_size));
         if(itr != end)
             return {itr, end};
     }
     {
         auto [itr, end] = equal_range(pos + Vector2i(grid_size, -grid_size));
-        if(itr != end)
-            return {itr, end};
-    }
-    {
-        auto [itr, end] = equal_range(pos + Vector2i(-grid_size, 0));
         if(itr != end)
             return {itr, end};
     }

@@ -1,10 +1,12 @@
-[gd_scene load_steps=6 format=3 uid="uid://cmooylkwatc0p"]
+[gd_scene load_steps=7 format=3 uid="uid://cmooylkwatc0p"]
 
 [ext_resource type="PackedScene" uid="uid://hu74s14k20iy" path="res://nmos.tscn" id="1_b3f13"]
 [ext_resource type="Script" path="res://main.gd" id="1_sfg7y"]
 [ext_resource type="PackedScene" uid="uid://bykmkfb2b00ut" path="res://pmos.tscn" id="3_wvt5y"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_pcjcu"]
+
+[sub_resource type="QuadMesh" id="QuadMesh_osegu"]
 
 [sub_resource type="QuadMesh" id="QuadMesh_q657h"]
 
@@ -23,6 +25,11 @@ size = Vector2i(620, 651)
 render_target_update_mode = 4
 
 [node name="Circuit" type="Circuit" parent="SubViewportContainer/SubViewport"]
+
+[node name="Cursor" type="MeshInstance2D" parent="SubViewportContainer/SubViewport/Circuit"]
+material = SubResource("ShaderMaterial_pcjcu")
+scale = Vector2(20, 20)
+mesh = SubResource("QuadMesh_osegu")
 
 [node name="ScrollCamera" type="ScrollCamera" parent="SubViewportContainer/SubViewport"]
 

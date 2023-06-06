@@ -42,7 +42,7 @@ public:
     void add_cable(Cable* cable)
     {
         cables.push_back(cable);
-        cable->for_part = true;
+        cable->for_part = this;
     }
 };
 

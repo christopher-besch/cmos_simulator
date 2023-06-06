@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://bykmkfb2b00ut"]
 
 [ext_resource type="Script" path="res://pmos.gd" id="1_e8xm4"]
-[ext_resource type="Texture2D" uid="uid://24dbkpsd2dih" path="res://pmos2.png" id="1_vvr3r"]
+[ext_resource type="Texture2D" uid="uid://cthc54cdvfxhe" path="res://pmos.png" id="2_tnkai"]
 [ext_resource type="PackedScene" uid="uid://dyolp4r4yncx5" path="res://cable.tscn" id="3_44q4e"]
 
 [node name="Part" type="Part"]
@@ -9,24 +9,52 @@ type = 2
 script = ExtResource("1_e8xm4")
 
 [node name="Sprite" type="Sprite2D" parent="."]
-texture = ExtResource("1_vvr3r")
+texture = ExtResource("2_tnkai")
 
 [node name="Source" parent="." instance=ExtResource("3_44q4e")]
 type = 1
 position = Vector2(120, -60)
-points = PackedVector2Array(0, 0, 20, 0)
+points = PackedVector2Array(-60, 80, -60, 80)
+
+[node name="Source2" parent="." instance=ExtResource("3_44q4e")]
+points = PackedVector2Array(100, 20, 100, -60)
+
+[node name="Source3" parent="." instance=ExtResource("3_44q4e")]
+points = PackedVector2Array(100, -60, 140, -60)
+
+[node name="Source4" parent="." instance=ExtResource("3_44q4e")]
+points = PackedVector2Array(60, 20, 120, 20)
 
 [node name="Drain" parent="." instance=ExtResource("3_44q4e")]
 type = 2
 position = Vector2(-140, -60)
-points = PackedVector2Array(0, 0, 20, 0)
+points = PackedVector2Array(80, 80, 80, 80)
+
+[node name="Drain2" parent="." instance=ExtResource("3_44q4e")]
+points = PackedVector2Array(-100, 20, -100, -60)
+
+[node name="Drain3" parent="." instance=ExtResource("3_44q4e")]
+points = PackedVector2Array(-140, -60, -100, -60)
+
+[node name="Drain4" parent="." instance=ExtResource("3_44q4e")]
+points = PackedVector2Array(-120, 20, -60, 20)
 
 [node name="Gate" parent="." instance=ExtResource("3_44q4e")]
 type = 3
 position = Vector2(-100, 120)
-points = PackedVector2Array(0, 0, 0, -20)
+points = PackedVector2Array(200, -80, 200, -80)
+
+[node name="Gate2" parent="." instance=ExtResource("3_44q4e")]
+points = PackedVector2Array(-100, 40, 100, 40)
+
+[node name="Gate3" parent="." instance=ExtResource("3_44q4e")]
+points = PackedVector2Array(-100, 120, -100, 40)
 
 [node name="Bulk" parent="." instance=ExtResource("3_44q4e")]
 type = 4
 position = Vector2(0, -120)
-points = PackedVector2Array(0, 0, 0, 20)
+points = PackedVector2Array(0, 60, 0, 60)
+
+[node name="Bulk2" parent="." instance=ExtResource("3_44q4e")]
+position = Vector2(0, -120)
+points = PackedVector2Array(0, 0, 0, 60)

@@ -26,6 +26,8 @@ class Circuit: public Node2D {
     GDCLASS(Circuit, Node2D)
 
 private:
+    Node2D*                   m_cursor {nullptr};
+    bool                      m_show_cursor {false};
     Ref<godot::PackedScene>   m_nmos_scene;
     Ref<godot::PackedScene>   m_pmos_scene;
     Ref<godot::PackedScene>   m_cable_scene;
@@ -61,10 +63,10 @@ public:
     void _input(const Ref<InputEvent>& event) override;
 
 private:
-    Vector2i to_grid_pos(Vector2i pos) const;
+    Vector2i mouse_to_grid(Vector2i pos) const;
 
     bool  is_part_clicked(Part* part, Vector2 pos) const;
-    Part* get_part(Vector2 pos);
+    Part* get_part(Vector2 pos) const;
 
     void add_part(Ref<godot::PackedScene> scene, Vector2 pos);
     void delete_part(Part* part);
@@ -72,8 +74,9 @@ private:
 
     void track_cable(Cable* cable);
     void untrack_cable(Cable* cable);
-    void add_cable(Cable* cable);
     void delete_cable(Cable* cable);
+
+    Vector2i sgn(Vector2 vec) const;
 };
 
 } // namespace godot
