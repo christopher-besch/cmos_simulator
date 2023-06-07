@@ -14,7 +14,7 @@ texture = ExtResource("2_tnkai")
 [node name="Source" parent="." instance=ExtResource("3_44q4e")]
 type = 1
 position = Vector2(120, -60)
-points = PackedVector2Array(-60, 80, -60, 80)
+points = PackedVector2Array(20, 0, 20, 0)
 
 [node name="Source2" parent="." instance=ExtResource("3_44q4e")]
 points = PackedVector2Array(100, 20, 100, -60)
@@ -28,7 +28,7 @@ points = PackedVector2Array(60, 20, 120, 20)
 [node name="Drain" parent="." instance=ExtResource("3_44q4e")]
 type = 2
 position = Vector2(-140, -60)
-points = PackedVector2Array(80, 80, 80, 80)
+points = PackedVector2Array(0, 0, 0, 0)
 
 [node name="Drain2" parent="." instance=ExtResource("3_44q4e")]
 points = PackedVector2Array(-100, 20, -100, -60)
@@ -42,7 +42,7 @@ points = PackedVector2Array(-120, 20, -60, 20)
 [node name="Gate" parent="." instance=ExtResource("3_44q4e")]
 type = 3
 position = Vector2(-100, 120)
-points = PackedVector2Array(200, -80, 200, -80)
+points = PackedVector2Array(0, 0, 0, 0)
 
 [node name="Gate2" parent="." instance=ExtResource("3_44q4e")]
 points = PackedVector2Array(-100, 40, 100, 40)
@@ -53,7 +53,7 @@ points = PackedVector2Array(-100, 120, -100, 40)
 [node name="Bulk" parent="." instance=ExtResource("3_44q4e")]
 type = 4
 position = Vector2(0, -120)
-points = PackedVector2Array(0, 60, 0, 60)
+points = PackedVector2Array(0, 0, 0, 0)
 
 [node name="Bulk2" parent="." instance=ExtResource("3_44q4e")]
 position = Vector2(0, -120)

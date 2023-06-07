@@ -14,7 +14,7 @@ texture = ExtResource("2_1g1xa")
 [node name="Source" parent="." instance=ExtResource("3_gh1hg")]
 type = 1
 position = Vector2(120, -60)
-points = PackedVector2Array(-60, 80, -60, 80)
+points = PackedVector2Array(20, 0, 20, 0)
 
 [node name="Source2" parent="." instance=ExtResource("3_gh1hg")]
 position = Vector2(120, -60)
@@ -31,7 +31,7 @@ points = PackedVector2Array(0, 80, -60, 80)
 [node name="Drain" parent="." instance=ExtResource("3_gh1hg")]
 type = 2
 position = Vector2(-140, -60)
-points = PackedVector2Array(80, 80, 80, 80)
+points = PackedVector2Array(0, 0, 0, 0)
 
 [node name="Drain2" parent="." instance=ExtResource("3_gh1hg")]
 position = Vector2(-140, -60)
@@ -48,7 +48,7 @@ points = PackedVector2Array(20, 80, 80, 80)
 [node name="Gate" parent="." instance=ExtResource("3_gh1hg")]
 type = 3
 position = Vector2(-100, 120)
-points = PackedVector2Array(200, -80, 200, -80)
+points = PackedVector2Array(0, 0, 0, 0)
 
 [node name="Gate2" parent="." instance=ExtResource("3_gh1hg")]
 position = Vector2(-100, 120)
@@ -61,7 +61,7 @@ points = PackedVector2Array(0, -80, 0, 0)
 [node name="Bulk" parent="." instance=ExtResource("3_gh1hg")]
 type = 4
 position = Vector2(0, -120)
-points = PackedVector2Array(0, 80, 0, 80)
+points = PackedVector2Array(0, 0, 0, 0)
 
 [node name="Bulk2" parent="." instance=ExtResource("3_gh1hg")]
 position = Vector2(0, -120)

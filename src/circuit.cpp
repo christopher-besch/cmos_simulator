@@ -63,20 +63,30 @@ void Circuit::_input(const Ref<InputEvent>& event)
     if(event->is_action_pressed("click")) {
         switch(m_tool) {
         case Tool::MOVE: {
-            auto [itr, range_end] = m_connectors.equal_range(mouse_to_grid(mouse_pos));
-            if(itr != range_end) {
-                m_new_cable = Object::cast_to<Cable>(m_cable_scene->instantiate());
-                m_new_cable->set_position(itr->first);
-                add_child(m_new_cable);
+            bool found {false};
+            auto [itr, range_end] = m_connectors.equal_range_square(mouse_to_grid(mouse_pos), m_grid_size);
+            for(; itr != range_end; ++itr) {
+                // only use cables that have length != 0 and are not for a part
+                // or cables that have length == 0 and are for a part
+                // -> ignore cables that are for parts but not of length 0
+                if((itr->second->for_part != nullptr) ==
+                   (itr->second->get_point_position(0) == itr->second->get_point_position(1))) {
+                    m_new_cable = Object::cast_to<Cable>(m_cable_scene->instantiate());
+                    m_new_cable->set_position(itr->first);
+                    add_child(m_new_cable);
+                    found = true;
+                    break;
+                }
             }
-            else {
+            if(!found) {
                 Part* part = get_part(mouse_pos);
                 if(part) {
                     m_moving_part      = part;
                     m_moving_part_grab = mouse_pos - part->get_position();
                 }
             }
-        } break;
+            break;
+        }
         case Tool::DELETE: {
             Part* part = get_part(mouse_pos);
             if(part) {
@@ -109,13 +119,12 @@ void Circuit::_input(const Ref<InputEvent>& event)
     }
     else if(event->is_action_released("click") && m_tool == Tool::MOVE) {
         if(m_new_cable) {
-            if(m_new_cable->get_point_position(1) == Vector2i(0, 0)) {
+            if(m_new_cable->get_point_position(0) == m_new_cable->get_point_position(1)) {
                 remove_child(m_new_cable);
                 m_new_cable->queue_free();
             }
-            else {
+            else
                 track_cable(m_new_cable);
-            }
         }
         m_new_cable   = nullptr;
         m_moving_part = nullptr;
@@ -185,25 +194,17 @@ void Circuit::move_part(Part* part, Vector2i new_pos)
 
 void Circuit::track_cable(Cable* cable)
 {
+    // round in case of rotation
     Vector2i start = cable->to_global(cable->get_point_position(0)).round();
     Vector2i end   = cable->to_global(cable->get_point_position(1)).round();
     Vector2i step  = m_grid_size * sgn(end - start);
-    prt(cable->get_point_position(0));
-    prt(cable->to_global(cable->get_point_position(0)).round());
-    prt(start);
-    prt(cable->get_point_position(1));
-    prt(cable->to_global(cable->get_point_position(1)).round());
-    prt(end);
-    prt(step);
 
     if(step == Vector2i(0, 0)) {
         m_connectors.insert(start, cable);
-        PRT(m_connectors.size());
         return;
     }
     for(Vector2i pos {start}; pos != end + step; pos += step)
         m_connectors.insert(pos, cable);
-    PRT(m_connectors.size());
 }
 
 void Circuit::untrack_cable(Cable* cable)
@@ -214,12 +215,10 @@ void Circuit::untrack_cable(Cable* cable)
 
     if(step == Vector2i(0, 0)) {
         m_connectors.erase(start, cable);
-        PRT(m_connectors.size());
         return;
     }
     for(Vector2i pos {start}; pos != end + step; pos += step)
         m_connectors.erase(pos, cable);
-    PRT(m_connectors.size());
 }
 
 void Circuit::delete_cable(Cable* cable)
