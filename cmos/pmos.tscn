@@ -1,12 +1,10 @@
-[gd_scene load_steps=4 format=3 uid="uid://bykmkfb2b00ut"]
+[gd_scene load_steps=3 format=3 uid="uid://bykmkfb2b00ut"]
 
-[ext_resource type="Script" path="res://pmos.gd" id="1_e8xm4"]
 [ext_resource type="Texture2D" uid="uid://cthc54cdvfxhe" path="res://pmos.png" id="2_tnkai"]
 [ext_resource type="PackedScene" uid="uid://dyolp4r4yncx5" path="res://cable.tscn" id="3_44q4e"]
 
 [node name="Part" type="Part"]
 type = 2
-script = ExtResource("1_e8xm4")
 
 [node name="Sprite" type="Sprite2D" parent="."]
 texture = ExtResource("2_tnkai")

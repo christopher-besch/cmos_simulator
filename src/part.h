@@ -6,6 +6,7 @@
 
 #include <godot_cpp/classes/input_event.hpp>
 #include <godot_cpp/classes/node2d.hpp>
+#include <godot_cpp/classes/object.hpp>
 #include <godot_cpp/variant/utility_functions.hpp>
 
 namespace godot {
@@ -19,18 +20,36 @@ enum class PartType : int {
 struct Part: public Node2D {
     GDCLASS(Part, Node2D)
 
+    PartType type {PartType::NONE};
+    Vector2  size;
+
+    // special handling here
+private:
     std::vector<Cable*> cables {};
-    PartType            type {PartType::NONE};
-    Vector2             size;
 
 protected:
     static void _bind_methods()
     {
         BIND_ATR(Part, type, INT);
-        godot::ClassDB::bind_method(D_METHOD("add_cable", "cable"), &Part::add_cable);
     }
 
 public:
+    // cables can't be changed after this is called
+    std::vector<Cable*>& get_cables()
+    {
+        if(cables.size())
+            return cables;
+        TypedArray<Node> children = get_children();
+        for(int i {0}; i < children.size(); ++i) {
+            Cable* child = Object::cast_to<Cable>(children[i]);
+            if(!child)
+                continue;
+            cables.push_back(child);
+            child->for_part = this;
+        }
+        return cables;
+    }
+
     int get_type() const
     {
         return static_cast<int>(type);
@@ -38,11 +57,6 @@ public:
     void set_type(int p_type)
     {
         type = static_cast<PartType>(p_type);
-    }
-    void add_cable(Cable* cable)
-    {
-        cables.push_back(cable);
-        cable->for_part = this;
     }
 };
 

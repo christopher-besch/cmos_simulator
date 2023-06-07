@@ -1,12 +1,10 @@
-[gd_scene load_steps=4 format=3 uid="uid://hu74s14k20iy"]
+[gd_scene load_steps=3 format=3 uid="uid://hu74s14k20iy"]
 
-[ext_resource type="Script" path="res://nmos.gd" id="1_afj3t"]
 [ext_resource type="Texture2D" uid="uid://cgp3hkwnw2kin" path="res://nmos.png" id="2_1g1xa"]
 [ext_resource type="PackedScene" uid="uid://dyolp4r4yncx5" path="res://cable.tscn" id="3_gh1hg"]
 
 [node name="NMOS" type="Part"]
 type = 1
-script = ExtResource("1_afj3t")
 
 [node name="Sprite" type="Sprite2D" parent="."]
 texture = ExtResource("2_1g1xa")

@@ -5,6 +5,7 @@
 #include <godot_cpp/classes/engine.hpp>
 #include <godot_cpp/classes/input.hpp>
 #include <godot_cpp/classes/input_event_mouse_motion.hpp>
+#include <godot_cpp/classes/json.hpp>
 #include <godot_cpp/classes/line2d.hpp>
 #include <godot_cpp/classes/resource_loader.hpp>
 #include <godot_cpp/classes/sprite2d.hpp>
@@ -101,10 +102,10 @@ void Circuit::_input(const Ref<InputEvent>& event)
         case Tool::ROTATE: {
             Part* part = get_part(mouse_pos);
             if(part) {
-                for(Cable* cable: part->cables)
+                for(Cable* cable: part->get_cables())
                     untrack_cable(cable);
-                part->rotate(M_PI);
-                for(Cable* cable: part->cables)
+                part->rotate(M_PI / 2);
+                for(Cable* cable: part->get_cables())
                     track_cable(cable);
             }
             break;
@@ -166,7 +167,7 @@ void Circuit::add_part(Ref<godot::PackedScene> scene, Vector2 pos)
     add_child(part);
 
     part->size = part->get_node<Sprite2D>("Sprite")->get_texture()->get_size();
-    for(Cable* cable: part->cables)
+    for(Cable* cable: part->get_cables())
         track_cable(cable);
     m_parts.insert(part);
 }
@@ -175,7 +176,7 @@ void Circuit::delete_part(Part* part)
 {
     m_parts.erase(part);
 
-    for(Cable* cable: part->cables)
+    for(Cable* cable: part->get_cables())
         untrack_cable(cable);
     remove_child(part);
     part->queue_free();
@@ -185,10 +186,10 @@ void Circuit::move_part(Part* part, Vector2i new_pos)
 {
     if(new_pos == part->get_position())
         return;
-    for(Cable* cable: part->cables)
+    for(Cable* cable: part->get_cables())
         untrack_cable(cable);
     part->set_position(new_pos);
-    for(Cable* cable: part->cables)
+    for(Cable* cable: part->get_cables())
         track_cable(cable);
 }
 
