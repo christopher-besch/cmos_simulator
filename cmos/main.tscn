@@ -28,6 +28,7 @@ render_target_update_mode = 4
 
 [node name="Cursor" type="MeshInstance2D" parent="SubViewportContainer/SubViewport/Circuit"]
 material = SubResource("ShaderMaterial_pcjcu")
+position = Vector2(880, 260)
 scale = Vector2(20, 20)
 mesh = SubResource("QuadMesh_osegu")
 
@@ -45,11 +46,38 @@ offset_top = 67.0
 offset_right = 762.0
 offset_bottom = 122.0
 
+[node name="Label" type="Label" parent="MoveButton"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+text = "Move/
+Connect"
+
 [node name="DeleteButton" type="Button" parent="."]
 offset_left = 814.0
 offset_top = 72.0
 offset_right = 886.0
 offset_bottom = 127.0
+
+[node name="Label" type="Label" parent="DeleteButton"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+text = "Delete
+"
+
+[node name="RotateButton" type="Button" parent="."]
+offset_left = 823.0
+offset_top = 166.0
+offset_right = 911.0
+offset_bottom = 224.0
+
+[node name="Label" type="Label" parent="RotateButton"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+text = "Rotate
+"
 
 [node name="NMOSButton" type="Button" parent="."]
 offset_left = 666.0

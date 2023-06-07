@@ -20,6 +20,7 @@ enum class Tool : int {
     DELETE      = 1,
     CREATE_NMOS = 2,
     CREATE_PMOS = 3,
+    ROTATE      = 4,
 };
 
 class Circuit: public Node2D {
