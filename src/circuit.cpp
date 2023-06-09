@@ -1,11 +1,8 @@
 #include "circuit.h"
-#include "cable.h"
-#include "helper.h"
 
 #include <godot_cpp/classes/engine.hpp>
 #include <godot_cpp/classes/input.hpp>
 #include <godot_cpp/classes/input_event_mouse_motion.hpp>
-#include <godot_cpp/classes/json.hpp>
 #include <godot_cpp/classes/line2d.hpp>
 #include <godot_cpp/classes/resource_loader.hpp>
 #include <godot_cpp/classes/sprite2d.hpp>

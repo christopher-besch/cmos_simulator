@@ -44,6 +44,7 @@ protected:
     static void _bind_methods()
     {
         BIND_ATR(Circuit, tool, INT);
+        ClassDB::bind_method(D_METHOD("to_json"), &Circuit::to_json);
     }
 
 public:
@@ -57,11 +58,15 @@ public:
     void set_tool(int tool)
     {
         m_tool = static_cast<Tool>(tool);
+        prt(to_json());
     }
 
     void _ready() override;
     void _process(double delta) override;
     void _input(const Ref<InputEvent>& event) override;
+
+    String to_json() const;
+    void   load_json(String json) const;
 
 private:
     Vector2i mouse_to_grid(Vector2i pos) const;
