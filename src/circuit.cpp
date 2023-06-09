@@ -107,11 +107,8 @@ void Circuit::_input(const Ref<InputEvent>& event)
             }
             break;
         }
-        case Tool::CREATE_NMOS:
-            add_part(m_nmos_scene, mouse_pos);
-            break;
-        case Tool::CREATE_PMOS:
-            add_part(m_pmos_scene, mouse_pos);
+        case Tool::CREATE:
+            create_part_of_type(m_create_part_type, mouse_pos);
             break;
         }
     }
@@ -155,7 +152,7 @@ Part* Circuit::get_part(Vector2 pos) const
     return nullptr;
 }
 
-void Circuit::add_part(Ref<godot::PackedScene> scene, Vector2 pos)
+void Circuit::add_part(Ref<godot::PackedScene> scene, Vector2 pos, double rotation)
 {
     if(get_part(pos))
         return;
@@ -163,6 +160,7 @@ void Circuit::add_part(Ref<godot::PackedScene> scene, Vector2 pos)
     part->set_position(mouse_to_grid(pos));
     add_child(part);
 
+    part->rotate(rotation);
     part->size = part->get_node<Sprite2D>("Sprite")->get_texture()->get_size();
     for(Cable* cable: part->get_cables())
         track_cable(cable);
@@ -201,6 +199,7 @@ void Circuit::track_cable(Cable* cable)
         m_connectors.insert(start, cable);
         return;
     }
+    // TODO: prevent endless loop check
     for(Vector2i pos {start}; pos != end + step; pos += step)
         m_connectors.insert(pos, cable);
 }
@@ -215,6 +214,7 @@ void Circuit::untrack_cable(Cable* cable)
         m_connectors.erase(start, cable);
         return;
     }
+    // TODO: prevent endless loop check
     for(Vector2i pos {start}; pos != end + step; pos += step)
         m_connectors.erase(pos, cable);
 }
@@ -231,4 +231,33 @@ Vector2i Circuit::sgn(Vector2 vec) const
     return Vector2i(
         (0 < vec.x) - (vec.x < 0),
         (0 < vec.y) - (vec.y < 0));
+}
+
+void Circuit::delete_all()
+{
+    TypedArray<Node> children = get_children();
+    for(int i {0}; i < children.size(); ++i) {
+        // go through cables first -> don't delete part before going over part's cable
+        {
+            Cable* cable = Object::cast_to<Cable>(children[i]);
+            if(cable && !cable->for_part) {
+                delete_cable(cable);
+                continue;
+            }
+        }
+        {
+            Part* part = Object::cast_to<Part>(children[i]);
+            if(part)
+                delete_part(part);
+        }
+    }
+}
+
+void Circuit::add_cable(Vector2i pos0, Vector2i pos1)
+{
+    Cable* cable = Object::cast_to<Cable>(m_cable_scene->instantiate());
+    add_child(cable);
+    cable->set_point_position(0, pos0);
+    cable->set_point_position(1, pos1);
+    track_cable(cable);
 }

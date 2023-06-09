@@ -25,9 +25,10 @@ void uninitialize_cmos_module(ModuleInitializationLevel p_level)
         return;
 }
 extern "C" {
-GDExtensionBool GDE_EXPORT cmos_library_init(const GDExtensionInterface* p_interface, const GDExtensionClassLibraryPtr p_library, GDExtensionInitialization* r_initialization)
+
+GDExtensionBool GDE_EXPORT cmos_library_init(GDExtensionInterfaceGetProcAddress get_proc_address, const GDExtensionClassLibraryPtr library, GDExtensionInitialization* r_initialization)
 {
-    godot::GDExtensionBinding::InitObject init_obj(p_interface, p_library, r_initialization);
+    godot::GDExtensionBinding::InitObject init_obj(get_proc_address, library, r_initialization);
 
     init_obj.register_initializer(initialize_cmos_module);
     init_obj.register_terminator(uninitialize_cmos_module);

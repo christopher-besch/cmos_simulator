@@ -28,7 +28,7 @@ render_target_update_mode = 4
 
 [node name="Cursor" type="MeshInstance2D" parent="SubViewportContainer/SubViewport/Circuit"]
 material = SubResource("ShaderMaterial_pcjcu")
-position = Vector2(1500, -340)
+position = Vector2(1320, 600)
 scale = Vector2(20, 20)
 mesh = SubResource("QuadMesh_osegu")
 
@@ -40,11 +40,33 @@ position = Vector2(896.5, 329)
 scale = Vector2(551, 660)
 mesh = SubResource("QuadMesh_q657h")
 
+[node name="ImportButton" type="Button" parent="."]
+offset_left = 790.0
+offset_top = 551.0
+offset_right = 894.0
+offset_bottom = 582.0
+text = "Import JSON
+"
+
+[node name="JSON" type="TextEdit" parent="."]
+offset_left = 787.0
+offset_top = 485.0
+offset_right = 1024.0
+offset_bottom = 541.0
+text = "{\"cables\":[],\"parts\":[]}"
+
+[node name="ExportButton" type="Button" parent="."]
+offset_left = 917.0
+offset_top = 551.0
+offset_right = 1019.0
+offset_bottom = 582.0
+text = "Export JSON"
+
 [node name="MoveButton" type="Button" parent="."]
-offset_left = 690.0
+offset_left = 663.0
 offset_top = 67.0
-offset_right = 762.0
-offset_bottom = 122.0
+offset_right = 745.0
+offset_bottom = 140.0
 
 [node name="Label" type="Label" parent="MoveButton"]
 layout_mode = 0

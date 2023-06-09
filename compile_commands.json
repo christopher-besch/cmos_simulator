@@ -1,14 +1,32 @@
 [
     {
-        "command": "g++ -o src/cmos.os -c -std=c++17 -fPIC -Wwrite-strings -m64 -march=x86-64 -O2 -fPIC -DDEBUG_ENABLED -DDEBUG_METHODS_ENABLED -Igodot-cpp/gdextension -Igodot-cpp/include -Igodot-cpp/gen/include -Isrc src/cmos.cpp",
+        "command": "clang++ -o src/circuit.os -c -std=c++17 -fPIC -Wwrite-strings -m64 -march=x86-64 -O2 -fPIC -DDEBUG_ENABLED -DDEBUG_METHODS_ENABLED -Igodot-cpp/gdextension -Igodot-cpp/include -Igodot-cpp/gen/include -Isrc src/circuit.cpp",
         "directory": "/home/chris/godot/cmos",
-        "file": "src/cmos.cpp",
-        "output": "src/cmos.os"
+        "file": "src/circuit.cpp",
+        "output": "src/circuit.os"
     },
     {
-        "command": "g++ -o src/register_types.os -c -std=c++17 -fPIC -Wwrite-strings -m64 -march=x86-64 -O2 -fPIC -DDEBUG_ENABLED -DDEBUG_METHODS_ENABLED -Igodot-cpp/gdextension -Igodot-cpp/include -Igodot-cpp/gen/include -Isrc src/register_types.cpp",
+        "command": "clang++ -o src/connector_container.os -c -std=c++17 -fPIC -Wwrite-strings -m64 -march=x86-64 -O2 -fPIC -DDEBUG_ENABLED -DDEBUG_METHODS_ENABLED -Igodot-cpp/gdextension -Igodot-cpp/include -Igodot-cpp/gen/include -Isrc src/connector_container.cpp",
+        "directory": "/home/chris/godot/cmos",
+        "file": "src/connector_container.cpp",
+        "output": "src/connector_container.os"
+    },
+    {
+        "command": "clang++ -o src/json.os -c -std=c++17 -fPIC -Wwrite-strings -m64 -march=x86-64 -O2 -fPIC -DDEBUG_ENABLED -DDEBUG_METHODS_ENABLED -Igodot-cpp/gdextension -Igodot-cpp/include -Igodot-cpp/gen/include -Isrc src/json.cpp",
+        "directory": "/home/chris/godot/cmos",
+        "file": "src/json.cpp",
+        "output": "src/json.os"
+    },
+    {
+        "command": "clang++ -o src/register_types.os -c -std=c++17 -fPIC -Wwrite-strings -m64 -march=x86-64 -O2 -fPIC -DDEBUG_ENABLED -DDEBUG_METHODS_ENABLED -Igodot-cpp/gdextension -Igodot-cpp/include -Igodot-cpp/gen/include -Isrc src/register_types.cpp",
         "directory": "/home/chris/godot/cmos",
         "file": "src/register_types.cpp",
         "output": "src/register_types.os"
+    },
+    {
+        "command": "clang++ -o src/scroll_camera.os -c -std=c++17 -fPIC -Wwrite-strings -m64 -march=x86-64 -O2 -fPIC -DDEBUG_ENABLED -DDEBUG_METHODS_ENABLED -Igodot-cpp/gdextension -Igodot-cpp/include -Igodot-cpp/gen/include -Isrc src/scroll_camera.cpp",
+        "directory": "/home/chris/godot/cmos",
+        "file": "src/scroll_camera.cpp",
+        "output": "src/scroll_camera.os"
     }
 ]
