@@ -5,6 +5,7 @@
 #include "helper.h"
 #include "part.h"
 #include "scroll_camera.h"
+#include "trace_cables.h"
 
 #include <godot_cpp/classes/input_event.hpp>
 #include <godot_cpp/classes/node2d.hpp>
@@ -48,6 +49,7 @@ protected:
         BIND_ATR(Circuit, create_part_type, INT);
         ClassDB::bind_method(D_METHOD("to_json"), &Circuit::to_json);
         ClassDB::bind_method(D_METHOD("load_json", "json"), &Circuit::load_json);
+        ClassDB::bind_method(D_METHOD("trace_circuit"), &Circuit::trace_circuit);
     }
 
 public:
@@ -77,6 +79,11 @@ public:
 
     String to_json() const;
     void   load_json(String json);
+
+    void trace_circuit()
+    {
+        trace_cables::trace_cables(m_parts, m_grid_size, m_connectors);
+    }
 
 private:
     Vector2i mouse_to_grid(Vector2i pos) const;

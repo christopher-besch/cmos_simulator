@@ -1,4 +1,5 @@
 #include "trace_cables.h"
+#include "godot_cpp/variant/color.hpp"
 #include "part.h"
 
 #include <queue>
@@ -37,13 +38,18 @@ void trace_cable(
     Cable*              start_cable,
     Part*               start_part,
     PartConGraph&       graph,
-    PartConSet&         visited_parts,
     int                 grid_size,
     ConnectorContainer& connectors)
 {
     std::queue<Cable*> q;
     q.push(start_cable);
     std::unordered_set<Cable*> visited;
+
+    Color color = Color(
+        static_cast<float>(rand()) / static_cast<float>(RAND_MAX),
+        static_cast<float>(rand()) / static_cast<float>(RAND_MAX),
+        static_cast<float>(rand()) / static_cast<float>(RAND_MAX),
+        1.0);
 
     while(!q.empty()) {
         Cable* cable = q.front();
@@ -63,15 +69,11 @@ void trace_cable(
                 // not final cable for part
                 // could also check if cable type is 0
                 if(new_cable->get_point_position(0) != new_cable->get_point_position(1)) {
+                    new_cable->set_default_color(color);
                     q.push(new_cable);
                     continue;
                 }
                 int p = new_cable->for_part->id;
-
-                // TODO: remove
-                if(visited_parts.find({p, cable->type}) != visited_parts.end())
-                    continue;
-                visited_parts.insert({p, cable->type});
 
                 graph.insert(std::make_pair(
                     std::make_pair(start_part->id, start_cable->type),
@@ -92,13 +94,12 @@ void trace_cables::trace_cables(std::unordered_set<Part*> parts_set, int grid_si
     }
 
     PartConGraph graph;
-    PartConSet   visited_parts;
 
     for(Part* part: parts)
         for(auto [type, cable]: part->start_cables) {
-            if(visited_parts.find({part->id, type}) != visited_parts.end())
+            // already handles from somewhere else?
+            if(graph.find({part->id, type}) != graph.end())
                 continue;
-            visited_parts.insert({part->id, type});
-            trace_cable(cable, part, graph, visited_parts, grid_size, connectors);
+            trace_cable(cable, part, graph, grid_size, connectors);
         }
 }

@@ -28,7 +28,7 @@ render_target_update_mode = 4
 
 [node name="Cursor" type="MeshInstance2D" parent="SubViewportContainer/SubViewport/Circuit"]
 material = SubResource("ShaderMaterial_pcjcu")
-position = Vector2(1160, 860)
+position = Vector2(-200, -300)
 scale = Vector2(20, 20)
 mesh = SubResource("QuadMesh_osegu")
 
@@ -120,3 +120,10 @@ offset_bottom = 372.0
 [node name="Part" parent="PMOSButton" instance=ExtResource("3_wvt5y")]
 position = Vector2(35, 37)
 scale = Vector2(0.3, 0.3)
+
+[node name="TraceButton" type="Button" parent="."]
+offset_left = 821.0
+offset_top = 259.0
+offset_right = 873.0
+offset_bottom = 303.0
+text = "Trace"
