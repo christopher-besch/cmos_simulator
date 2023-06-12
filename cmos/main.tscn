@@ -28,7 +28,7 @@ render_target_update_mode = 4
 
 [node name="Cursor" type="MeshInstance2D" parent="SubViewportContainer/SubViewport/Circuit"]
 material = SubResource("ShaderMaterial_pcjcu")
-position = Vector2(1320, 600)
+position = Vector2(1160, 860)
 scale = Vector2(20, 20)
 mesh = SubResource("QuadMesh_osegu")
 

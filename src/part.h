@@ -2,6 +2,7 @@
 
 #include "cable.h"
 #include "helper.h"
+#include <map>
 #include <vector>
 
 #include <godot_cpp/classes/input_event.hpp>
@@ -23,9 +24,10 @@ struct Part: public Node2D {
     PartType type {PartType::NONE};
     Vector2  size;
 
-    // special handling here
-private:
-    std::vector<Cable*> cables {};
+    // load_cables needs to be called first
+    std::vector<Cable*>             cables;
+    std::map<ConnectorType, Cable*> start_cables;
+    int                             id;
 
 protected:
     static void _bind_methods()
@@ -35,10 +37,9 @@ protected:
 
 public:
     // cables can't be changed after this is called
-    std::vector<Cable*>& get_cables()
+    void load_cables()
     {
-        if(cables.size())
-            return cables;
+        cables.resize(0);
         TypedArray<Node> children = get_children();
         for(int i {0}; i < children.size(); ++i) {
             Cable* child = Object::cast_to<Cable>(children[i]);
@@ -46,8 +47,10 @@ public:
                 continue;
             cables.push_back(child);
             child->for_part = this;
+
+            if(child->type != ConnectorType::NONE)
+                start_cables[child->type] = child;
         }
-        return cables;
     }
 
     int get_type() const

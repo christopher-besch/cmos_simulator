@@ -1,4 +1,5 @@
 #include "circuit.h"
+#include "trace_cables.h"
 
 #include <godot_cpp/classes/engine.hpp>
 #include <godot_cpp/classes/input.hpp>
@@ -86,23 +87,23 @@ void Circuit::_input(const Ref<InputEvent>& event)
             break;
         }
         case Tool::DELETE: {
-            Part* part = get_part(mouse_pos);
-            if(part) {
-                delete_part(part);
+            auto [itr, range_end] = m_connectors.equal_range(mouse_to_grid(mouse_pos));
+            if(itr != range_end && !itr->second->for_part) {
+                delete_cable(itr->second);
                 break;
             }
-            auto [itr, range_end] = m_connectors.equal_range(mouse_to_grid(mouse_pos));
-            if(itr != range_end && !itr->second->for_part)
-                delete_cable(itr->second);
+            Part* part = get_part(mouse_pos);
+            if(part)
+                delete_part(part);
             break;
         }
         case Tool::ROTATE: {
             Part* part = get_part(mouse_pos);
             if(part) {
-                for(Cable* cable: part->get_cables())
+                for(Cable* cable: part->cables)
                     untrack_cable(cable);
                 part->rotate(M_PI / 2);
-                for(Cable* cable: part->get_cables())
+                for(Cable* cable: part->cables)
                     track_cable(cable);
             }
             break;
@@ -128,7 +129,7 @@ void Circuit::_input(const Ref<InputEvent>& event)
 
 Vector2i Circuit::mouse_to_grid(Vector2i pos) const
 {
-    pos += 0.5 * m_grid_size * sgn(pos);
+    pos += 0.5 * m_grid_size * trace_cables::sgn(pos);
     Vector2i grid_pos = Vector2i(pos / m_grid_size) * m_grid_size;
     return grid_pos;
 }
@@ -162,7 +163,8 @@ void Circuit::add_part(Ref<godot::PackedScene> scene, Vector2 pos, double rotati
 
     part->rotate(rotation);
     part->size = part->get_node<Sprite2D>("Sprite")->get_texture()->get_size();
-    for(Cable* cable: part->get_cables())
+    part->load_cables();
+    for(Cable* cable: part->cables)
         track_cable(cable);
     m_parts.insert(part);
 }
@@ -171,7 +173,7 @@ void Circuit::delete_part(Part* part)
 {
     m_parts.erase(part);
 
-    for(Cable* cable: part->get_cables())
+    for(Cable* cable: part->cables)
         untrack_cable(cable);
     remove_child(part);
     part->queue_free();
@@ -181,42 +183,22 @@ void Circuit::move_part(Part* part, Vector2i new_pos)
 {
     if(new_pos == part->get_position())
         return;
-    for(Cable* cable: part->get_cables())
+    for(Cable* cable: part->cables)
         untrack_cable(cable);
     part->set_position(new_pos);
-    for(Cable* cable: part->get_cables())
+    for(Cable* cable: part->cables)
         track_cable(cable);
 }
 
 void Circuit::track_cable(Cable* cable)
 {
-    // round in case of rotation
-    Vector2i start = cable->to_global(cable->get_point_position(0)).round();
-    Vector2i end   = cable->to_global(cable->get_point_position(1)).round();
-    Vector2i step  = m_grid_size * sgn(end - start);
-
-    if(step == Vector2i(0, 0)) {
-        m_connectors.insert(start, cable);
-        return;
-    }
-    // TODO: prevent endless loop check
-    for(Vector2i pos {start}; pos != end + step; pos += step)
-        m_connectors.insert(pos, cable);
+    for(Vector2i con: trace_cables::get_cable_cons(cable, m_grid_size, m_connectors))
+        m_connectors.insert(con, cable);
 }
-
 void Circuit::untrack_cable(Cable* cable)
 {
-    Vector2i start = cable->to_global(cable->get_point_position(0)).round();
-    Vector2i end   = cable->to_global(cable->get_point_position(1)).round();
-    Vector2i step  = m_grid_size * sgn(end - start);
-
-    if(step == Vector2i(0, 0)) {
-        m_connectors.erase(start, cable);
-        return;
-    }
-    // TODO: prevent endless loop check
-    for(Vector2i pos {start}; pos != end + step; pos += step)
-        m_connectors.erase(pos, cable);
+    for(Vector2i con: trace_cables::get_cable_cons(cable, m_grid_size, m_connectors))
+        m_connectors.erase(con, cable);
 }
 
 void Circuit::delete_cable(Cable* cable)
@@ -224,13 +206,6 @@ void Circuit::delete_cable(Cable* cable)
     untrack_cable(cable);
     remove_child(cable);
     cable->queue_free();
-}
-
-Vector2i Circuit::sgn(Vector2 vec) const
-{
-    return Vector2i(
-        (0 < vec.x) - (vec.x < 0),
-        (0 < vec.y) - (vec.y < 0));
 }
 
 void Circuit::delete_all()

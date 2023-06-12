@@ -11,6 +11,7 @@
 #include <godot_cpp/classes/packed_scene.hpp>
 #include <godot_cpp/variant/utility_functions.hpp>
 
+#include <map>
 #include <unordered_set>
 
 namespace godot {
@@ -94,8 +95,6 @@ private:
     void add_cable(Vector2i pos0, Vector2i pos1);
 
     void delete_all();
-
-    Vector2i sgn(Vector2 vec) const;
 
     void create_part_of_type(PartType type, Vector2i pos, double rotation = 0.0)
     {
