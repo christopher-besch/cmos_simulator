@@ -35,7 +35,7 @@ func set_gnd():
 func set_label():
 	circuit.tool = 2
 	circuit.next_part = label_scene.instantiate()
-	circuit.next_part.get_node("Label").text = label_edit.text
+	circuit.next_part.get_node("NonRotate/LabelContainer/Label").text = label_edit.text
 
 func import_json_btn():
 	circuit.load_json(get_node("JSON").text)
@@ -55,6 +55,7 @@ func _ready():
 	get_node("PMOSButton").connect("pressed", set_pmos)
 	get_node("GNDButton").connect("pressed", set_gnd)
 	get_node("LabelButton").connect("pressed", set_label)
+	label_edit.connect("text_changed", set_label)
 	get_node("ImportButton").connect("pressed", import_json_btn)
 	get_node("ExportButton").connect("pressed", export_json_btn)
 	get_node("TraceButton").connect("pressed", trace_circuit_btn)

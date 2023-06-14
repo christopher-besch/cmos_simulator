@@ -100,7 +100,11 @@ void Circuit::_input(const Ref<InputEvent>& event)
             if(part) {
                 for(Cable* cable: part->cables)
                     untrack_cable(cable);
+
                 part->rotate(M_PI / 2);
+                for(Node2D* no_rotate_note: part->no_rotate_nodes)
+                    no_rotate_note->rotate(-M_PI / 2);
+
                 for(Cable* cable: part->cables)
                     track_cable(cable);
             }

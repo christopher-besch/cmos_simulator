@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://drau6kelyyeki"]
+[gd_scene load_steps=4 format=3 uid="uid://drau6kelyyeki"]
 
 [ext_resource type="Texture2D" uid="uid://dgg0n1i5rofys" path="res://parts/label.png" id="1_b70yh"]
 [ext_resource type="PackedScene" uid="uid://dyolp4r4yncx5" path="res://cable.tscn" id="2_iy8f0"]
+[ext_resource type="LabelSettings" uid="uid://kquchrpb673w" path="res://label_text.tres" id="3_ejmdj"]
 
 [node name="Label" type="Part"]
 type = 4
@@ -16,8 +17,15 @@ points = PackedVector2Array(0, 20, 0, 20)
 [node name="Cable2" parent="." instance=ExtResource("2_iy8f0")]
 points = PackedVector2Array(0, 0, 0, 20)
 
-[node name="Label" type="Label" parent="."]
-offset_left = 20.0
-offset_top = -20.0
-offset_right = 80.0
-offset_bottom = 20.0
+[node name="NonRotate" type="Node2D" parent="."]
+
+[node name="LabelContainer" type="Node2D" parent="NonRotate"]
+position = Vector2(32, -9)
+
+[node name="Label" type="Label" parent="NonRotate/LabelContainer"]
+offset_left = -9.0
+offset_top = -14.0
+offset_right = 51.0
+offset_bottom = 26.0
+text = "a"
+label_settings = ExtResource("3_ejmdj")

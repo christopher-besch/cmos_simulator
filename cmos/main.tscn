@@ -30,7 +30,7 @@ render_target_update_mode = 4
 
 [node name="Cursor" type="MeshInstance2D" parent="SubViewportContainer/SubViewport/Circuit"]
 material = SubResource("ShaderMaterial_pcjcu")
-position = Vector2(740, 420)
+position = Vector2(1140, 420)
 scale = Vector2(20, 20)
 mesh = SubResource("QuadMesh_osegu")
 
@@ -124,16 +124,16 @@ position = Vector2(27, 27)
 scale = Vector2(0.400001, 0.400001)
 
 [node name="LabelEdit" type="TextEdit" parent="."]
-offset_left = 747.0
-offset_top = 415.0
-offset_right = 865.0
-offset_bottom = 453.0
-text = "Placeholder"
+offset_left = 771.0
+offset_top = 423.0
+offset_right = 855.0
+offset_bottom = 461.0
+placeholder_text = "variable"
 
 [node name="LabelButton" type="Button" parent="."]
 offset_left = 686.0
 offset_top = 411.0
-offset_right = 740.0
+offset_right = 753.0
 offset_bottom = 471.0
 
 [node name="Label" parent="LabelButton" instance=ExtResource("4_jwdwh")]

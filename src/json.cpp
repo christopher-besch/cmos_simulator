@@ -41,7 +41,7 @@ String Circuit::to_json() const
                     {"rotation", part->get_rotation()},
                     {"type", static_cast<int>(part->type)},
                     {"label", part->type == PartType::LABEL ?
-                                  to_std_str(part->get_node<Label>("Label")->get_text()) :
+                                  to_std_str(part->get_node<Label>("NonRotate/LabelContainer/Label")->get_text()) :
                                   ""},
                 });
                 continue;
@@ -100,7 +100,7 @@ void Circuit::create_part_of_type(PartType type, Vector2i pos, double rotation, 
     case PartType::LABEL:
         part = Object::cast_to<Part>(m_label_scene->instantiate());
         PRT(m_next_part->get_children().size());
-        part->get_node<Label>("Label")->set_text(text);
+        part->get_node<Label>("NonRotate/LabelContainer/Label")->set_text(text);
         break;
     }
     m_next_part->set_rotation(rotation);

@@ -18,3 +18,5 @@ points = PackedVector2Array(-60, 0, 60, 0)
 
 [node name="GND3" parent="." instance=ExtResource("2_pmaa5")]
 points = PackedVector2Array(0, -40, 0, 0)
+
+[node name="NonRotate" type="Node2D" parent="."]

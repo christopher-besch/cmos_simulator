@@ -56,3 +56,5 @@ points = PackedVector2Array(0, 0, 0, 0)
 [node name="Bulk2" parent="." instance=ExtResource("3_44q4e")]
 position = Vector2(0, -120)
 points = PackedVector2Array(0, 0, 0, 60)
+
+[node name="NonRotate" type="Node2D" parent="."]
