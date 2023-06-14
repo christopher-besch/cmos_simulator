@@ -1,0 +1,20 @@
+[gd_scene load_steps=3 format=3 uid="uid://bhofc1q7kh4q0"]
+
+[ext_resource type="Texture2D" uid="uid://dc64oka2dti6e" path="res://parts/gnd.png" id="1_m6wj7"]
+[ext_resource type="PackedScene" uid="uid://dyolp4r4yncx5" path="res://cable.tscn" id="2_pmaa5"]
+
+[node name="GND" type="Part"]
+type = 3
+
+[node name="Sprite" type="Sprite2D" parent="."]
+texture = ExtResource("1_m6wj7")
+
+[node name="GND" parent="." instance=ExtResource("2_pmaa5")]
+type = 5
+points = PackedVector2Array(0, -40, 0, -40)
+
+[node name="GND2" parent="." instance=ExtResource("2_pmaa5")]
+points = PackedVector2Array(-60, 0, 60, 0)
+
+[node name="GND3" parent="." instance=ExtResource("2_pmaa5")]
+points = PackedVector2Array(0, -40, 0, 0)

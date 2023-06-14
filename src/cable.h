@@ -20,6 +20,10 @@ enum class ConnectorType : int {
     Drain  = 2,
     Gate   = 3,
     Bulk   = 4,
+
+    GND = 5,
+    // used for label
+    CABLE = 6,
 };
 
 struct Cable: public Line2D {

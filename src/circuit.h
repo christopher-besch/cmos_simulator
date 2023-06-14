@@ -28,28 +28,35 @@ class Circuit: public Node2D {
     GDCLASS(Circuit, Node2D)
 
 private:
-    Node2D*                   m_cursor {nullptr};
-    bool                      m_show_cursor {false};
-    Ref<godot::PackedScene>   m_nmos_scene;
-    Ref<godot::PackedScene>   m_pmos_scene;
-    Ref<godot::PackedScene>   m_cable_scene;
-    std::unordered_set<Part*> m_parts;
+    int m_grid_size {20};
+
+    Ref<godot::PackedScene> m_cable_scene;
+    Ref<godot::PackedScene> m_nmos_scene;
+    Ref<godot::PackedScene> m_pmos_scene;
+    Ref<godot::PackedScene> m_gnd_scene;
+    Ref<godot::PackedScene> m_label_scene;
+
     ConnectorContainer        m_connectors;
-    Tool                      m_tool {Tool::MOVE};
-    PartType                  m_create_part_type {PartType::NONE};
-    Part*                     m_moving_part {nullptr};
-    Vector2                   m_moving_part_grab;
-    Cable*                    m_new_cable {nullptr};
-    int                       m_grid_size {20};
+    std::unordered_set<Part*> m_parts;
+
+    Node2D* m_cursor {nullptr};
+    bool    m_show_cursor {false};
+
+    Tool    m_tool {Tool::MOVE};
+    Part*   m_next_part {nullptr};
+    Part*   m_moving_part {nullptr};
+    Vector2 m_moving_part_grab;
+    Cable*  m_new_cable {nullptr};
 
 protected:
     static void _bind_methods()
     {
         BIND_ATR(Circuit, tool, INT);
-        BIND_ATR(Circuit, create_part_type, INT);
+        BIND_ATR(Circuit, next_part, OBJECT);
         ClassDB::bind_method(D_METHOD("to_json"), &Circuit::to_json);
         ClassDB::bind_method(D_METHOD("load_json", "json"), &Circuit::load_json);
         ClassDB::bind_method(D_METHOD("trace_circuit"), &Circuit::trace_circuit);
+        ClassDB::bind_method(D_METHOD("set_scenes", "cable_scene", "nmos_scene", "pmos_scene", "gnd_scene", "label_scene"), &Circuit::set_scenes);
     }
 
 public:
@@ -64,13 +71,23 @@ public:
     {
         m_tool = static_cast<Tool>(tool);
     }
-    int get_create_part_type() const
+    Part* get_next_part()
     {
-        return static_cast<int>(m_create_part_type);
+        return m_next_part;
     }
-    void set_create_part_type(int create_part_type)
+    void set_next_part(Part* next_part)
     {
-        m_create_part_type = static_cast<PartType>(create_part_type);
+        if(m_next_part)
+            m_next_part->queue_free();
+        m_next_part = next_part;
+    }
+    void set_scenes(Ref<PackedScene> cable_scene, Ref<PackedScene> nmos_scene, Ref<PackedScene> pmos_scene, Ref<PackedScene> gnd_scene, Ref<PackedScene> label_scene)
+    {
+        m_cable_scene = cable_scene;
+        m_nmos_scene  = nmos_scene;
+        m_pmos_scene  = pmos_scene;
+        m_gnd_scene   = gnd_scene;
+        m_label_scene = label_scene;
     }
 
     void _ready() override;
@@ -91,7 +108,8 @@ private:
     bool  is_part_clicked(Part* part, Vector2 pos) const;
     Part* get_part(Vector2 pos) const;
 
-    void add_part(Ref<godot::PackedScene> scene, Vector2 pos, double rotation = 0.0);
+    void add_part(Part* part, Vector2i pos);
+    void create_part_of_type(PartType type, Vector2i pos, double rotation = 0.0, String text = "");
     void delete_part(Part* part);
     void move_part(Part* part, Vector2i new_pos);
 
@@ -102,18 +120,6 @@ private:
     void add_cable(Vector2i pos0, Vector2i pos1);
 
     void delete_all();
-
-    void create_part_of_type(PartType type, Vector2i pos, double rotation = 0.0)
-    {
-        switch(type) {
-        case PartType::NONE:
-            break;
-        case PartType::NMOS:
-            add_part(m_nmos_scene, pos, rotation);
-        case PartType::PMOS:
-            add_part(m_pmos_scene, pos, rotation);
-        }
-    }
 };
 
 } // namespace godot

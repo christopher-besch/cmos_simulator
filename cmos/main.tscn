@@ -1,8 +1,10 @@
-[gd_scene load_steps=7 format=3 uid="uid://cmooylkwatc0p"]
+[gd_scene load_steps=9 format=3 uid="uid://cmooylkwatc0p"]
 
-[ext_resource type="PackedScene" uid="uid://hu74s14k20iy" path="res://nmos.tscn" id="1_b3f13"]
+[ext_resource type="PackedScene" uid="uid://hu74s14k20iy" path="res://parts/nmos.tscn" id="1_b3f13"]
 [ext_resource type="Script" path="res://main.gd" id="1_sfg7y"]
-[ext_resource type="PackedScene" uid="uid://bykmkfb2b00ut" path="res://pmos.tscn" id="3_wvt5y"]
+[ext_resource type="PackedScene" uid="uid://bhofc1q7kh4q0" path="res://parts/gnd.tscn" id="3_vo4gs"]
+[ext_resource type="PackedScene" uid="uid://bykmkfb2b00ut" path="res://parts/pmos.tscn" id="3_wvt5y"]
+[ext_resource type="PackedScene" uid="uid://drau6kelyyeki" path="res://parts/label.tscn" id="4_jwdwh"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_pcjcu"]
 
@@ -28,7 +30,7 @@ render_target_update_mode = 4
 
 [node name="Cursor" type="MeshInstance2D" parent="SubViewportContainer/SubViewport/Circuit"]
 material = SubResource("ShaderMaterial_pcjcu")
-position = Vector2(-200, -300)
+position = Vector2(740, 420)
 scale = Vector2(20, 20)
 mesh = SubResource("QuadMesh_osegu")
 
@@ -110,6 +112,33 @@ offset_bottom = 260.0
 [node name="NMOS" parent="NMOSButton" instance=ExtResource("1_b3f13")]
 position = Vector2(30, 32)
 scale = Vector2(0.3, 0.3)
+
+[node name="GNDButton" type="Button" parent="."]
+offset_left = 849.0
+offset_top = 329.0
+offset_right = 903.0
+offset_bottom = 389.0
+
+[node name="NMOS" parent="GNDButton" instance=ExtResource("3_vo4gs")]
+position = Vector2(27, 27)
+scale = Vector2(0.400001, 0.400001)
+
+[node name="LabelEdit" type="TextEdit" parent="."]
+offset_left = 747.0
+offset_top = 415.0
+offset_right = 865.0
+offset_bottom = 453.0
+text = "Placeholder"
+
+[node name="LabelButton" type="Button" parent="."]
+offset_left = 686.0
+offset_top = 411.0
+offset_right = 740.0
+offset_bottom = 471.0
+
+[node name="Label" parent="LabelButton" instance=ExtResource("4_jwdwh")]
+position = Vector2(24, 30)
+scale = Vector2(0.839999, 0.839999)
 
 [node name="PMOSButton" type="Button" parent="."]
 offset_left = 671.0

@@ -12,13 +12,11 @@ using namespace godot;
 
 Circuit::Circuit()
 {
-    ResourceLoader* relo = ResourceLoader::get_singleton();
-    m_nmos_scene         = relo->load("res://nmos.tscn");
-    m_pmos_scene         = relo->load("res://pmos.tscn");
-    m_cable_scene        = relo->load("res://cable.tscn");
 }
 Circuit::~Circuit()
 {
+    if(m_next_part)
+        m_next_part->queue_free();
 }
 
 void Circuit::_ready()
@@ -109,7 +107,14 @@ void Circuit::_input(const Ref<InputEvent>& event)
             break;
         }
         case Tool::CREATE:
-            create_part_of_type(m_create_part_type, mouse_pos);
+            if(!m_next_part) {
+                // TODO:
+                // what the fuck?
+                PRT("dafuq?");
+                break;
+            }
+            Part* part = Object::cast_to<Part>(m_next_part->duplicate());
+            add_part(part, mouse_pos);
             break;
         }
     }
@@ -153,17 +158,16 @@ Part* Circuit::get_part(Vector2 pos) const
     return nullptr;
 }
 
-void Circuit::add_part(Ref<godot::PackedScene> scene, Vector2 pos, double rotation)
+void Circuit::add_part(Part* part, Vector2i pos)
 {
-    if(get_part(pos))
+    if(get_part(pos)) {
+        part->queue_free();
         return;
-    Part* part = Object::cast_to<Part>(scene->instantiate());
-    part->set_position(mouse_to_grid(pos));
-    add_child(part);
+    }
+    part->load();
 
-    part->rotate(rotation);
-    part->size = part->get_node<Sprite2D>("Sprite")->get_texture()->get_size();
-    part->load_cables();
+    add_child(part);
+    part->set_position(mouse_to_grid(pos));
     for(Cable* cable: part->cables)
         track_cable(cable);
     m_parts.insert(part);

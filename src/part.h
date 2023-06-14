@@ -2,20 +2,25 @@
 
 #include "cable.h"
 #include "helper.h"
+
 #include <map>
 #include <vector>
 
 #include <godot_cpp/classes/input_event.hpp>
+#include <godot_cpp/classes/label.hpp>
 #include <godot_cpp/classes/node2d.hpp>
 #include <godot_cpp/classes/object.hpp>
+#include <godot_cpp/classes/sprite2d.hpp>
 #include <godot_cpp/variant/utility_functions.hpp>
 
 namespace godot {
 
 enum class PartType : int {
-    NONE = 0,
-    NMOS = 1,
-    PMOS = 2,
+    NONE  = 0,
+    NMOS  = 1,
+    PMOS  = 2,
+    GND   = 3,
+    LABEL = 4,
 };
 
 struct Part: public Node2D {
@@ -37,7 +42,7 @@ protected:
 
 public:
     // cables can't be changed after this is called
-    void load_cables()
+    void load()
     {
         cables.resize(0);
         TypedArray<Node> children = get_children();
@@ -51,6 +56,8 @@ public:
             if(child->type != ConnectorType::NONE)
                 start_cables[child->type] = child;
         }
+
+        size = get_node<Sprite2D>("Sprite")->get_texture()->get_size();
     }
 
     int get_type() const

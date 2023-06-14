@@ -25,7 +25,7 @@ std::vector<Vector2i> get_cable_cons(Cable* cable, int grid_size, ConnectorConta
 
 void trace_cables(std::unordered_set<Part*> parts_set, int grid_size, ConnectorContainer& connectors);
 
-// TODO: maybe put somewhere else
+// TODO: put somewhere else
 Vector2i sgn(Vector2 vec);
 
 } // namespace godot::trace_cables

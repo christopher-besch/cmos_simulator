@@ -1,0 +1,23 @@
+[gd_scene load_steps=3 format=3 uid="uid://drau6kelyyeki"]
+
+[ext_resource type="Texture2D" uid="uid://dgg0n1i5rofys" path="res://parts/label.png" id="1_b70yh"]
+[ext_resource type="PackedScene" uid="uid://dyolp4r4yncx5" path="res://cable.tscn" id="2_iy8f0"]
+
+[node name="Label" type="Part"]
+type = 4
+
+[node name="Sprite" type="Sprite2D" parent="."]
+texture = ExtResource("1_b70yh")
+
+[node name="Cable" parent="." instance=ExtResource("2_iy8f0")]
+type = 6
+points = PackedVector2Array(0, 20, 0, 20)
+
+[node name="Cable2" parent="." instance=ExtResource("2_iy8f0")]
+points = PackedVector2Array(0, 0, 0, 20)
+
+[node name="Label" type="Label" parent="."]
+offset_left = 20.0
+offset_top = -20.0
+offset_right = 80.0
+offset_bottom = 20.0
