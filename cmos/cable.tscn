@@ -1,6 +1,14 @@
-[gd_scene format=3 uid="uid://dyolp4r4yncx5"]
+[gd_scene load_steps=2 format=3 uid="uid://dyolp4r4yncx5"]
+
+[sub_resource type="SegmentShape2D" id="SegmentShape2D_1qdvl"]
+b = Vector2(160, 0)
 
 [node name="Cable" type="Cable"]
 points = PackedVector2Array(0, 0, 160, 0)
 width = 12.0
 default_color = Color(0, 0, 0, 1)
+
+[node name="Area2D" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+shape = SubResource("SegmentShape2D_1qdvl")

@@ -7,6 +7,7 @@
 #include "scroll_camera.h"
 #include "trace_cables.h"
 
+#include <godot_cpp/classes/area2d.hpp>
 #include <godot_cpp/classes/input_event.hpp>
 #include <godot_cpp/classes/node2d.hpp>
 #include <godot_cpp/classes/packed_scene.hpp>
@@ -35,6 +36,7 @@ private:
     Ref<godot::PackedScene> m_pmos_scene;
     Ref<godot::PackedScene> m_gnd_scene;
     Ref<godot::PackedScene> m_label_scene;
+    Ref<godot::PackedScene> m_select_area_scene;
 
     ConnectorContainer        m_connectors;
     std::unordered_set<Part*> m_parts;
@@ -48,6 +50,10 @@ private:
     Vector2 m_moving_part_grab;
     Cable*  m_new_cable {nullptr};
 
+    Area2D*              m_select_area {nullptr};
+    Vector2              m_select_area_start;
+    std::vector<Node2D*> m_cur_selection;
+
 protected:
     static void _bind_methods()
     {
@@ -56,7 +62,7 @@ protected:
         ClassDB::bind_method(D_METHOD("to_json"), &Circuit::to_json);
         ClassDB::bind_method(D_METHOD("load_json", "json"), &Circuit::load_json);
         ClassDB::bind_method(D_METHOD("trace_circuit"), &Circuit::trace_circuit);
-        ClassDB::bind_method(D_METHOD("set_scenes", "cable_scene", "nmos_scene", "pmos_scene", "gnd_scene", "label_scene"), &Circuit::set_scenes);
+        ClassDB::bind_method(D_METHOD("set_scenes", "cable_scene", "nmos_scene", "pmos_scene", "gnd_scene", "label_scene", "select_area_scene"), &Circuit::set_scenes);
     }
 
 public:
@@ -81,13 +87,14 @@ public:
             m_next_part->queue_free();
         m_next_part = next_part;
     }
-    void set_scenes(Ref<PackedScene> cable_scene, Ref<PackedScene> nmos_scene, Ref<PackedScene> pmos_scene, Ref<PackedScene> gnd_scene, Ref<PackedScene> label_scene)
+    void set_scenes(Ref<PackedScene> cable_scene, Ref<PackedScene> nmos_scene, Ref<PackedScene> pmos_scene, Ref<PackedScene> gnd_scene, Ref<PackedScene> label_scene, Ref<PackedScene> select_area_scene)
     {
-        m_cable_scene = cable_scene;
-        m_nmos_scene  = nmos_scene;
-        m_pmos_scene  = pmos_scene;
-        m_gnd_scene   = gnd_scene;
-        m_label_scene = label_scene;
+        m_cable_scene       = cable_scene;
+        m_nmos_scene        = nmos_scene;
+        m_pmos_scene        = pmos_scene;
+        m_gnd_scene         = gnd_scene;
+        m_label_scene       = label_scene;
+        m_select_area_scene = select_area_scene;
     }
 
     void _ready() override;
@@ -105,8 +112,7 @@ public:
 private:
     Vector2i mouse_to_grid(Vector2i pos) const;
 
-    bool  is_part_clicked(Part* part, Vector2 pos) const;
-    Part* get_part(Vector2 pos) const;
+    bool is_part_clicked(Part* part, Vector2 pos) const;
 
     void add_part(Part* part, Vector2i pos);
     void create_part_of_type(PartType type, Vector2i pos, double rotation = 0.0, String text = "");
@@ -120,6 +126,8 @@ private:
     void add_cable(Vector2i pos0, Vector2i pos1);
 
     void delete_all();
+
+    std::vector<Node2D*> get_selection() const;
 };
 
 } // namespace godot

@@ -1,7 +1,10 @@
-[gd_scene load_steps=3 format=3 uid="uid://bykmkfb2b00ut"]
+[gd_scene load_steps=4 format=3 uid="uid://bykmkfb2b00ut"]
 
 [ext_resource type="Texture2D" uid="uid://cthc54cdvfxhe" path="res://parts/pmos.png" id="1_vm4c3"]
 [ext_resource type="PackedScene" uid="uid://dyolp4r4yncx5" path="res://cable.tscn" id="3_44q4e"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ixgy7"]
+size = Vector2(280, 240)
 
 [node name="Part" type="Part"]
 type = 2
@@ -58,3 +61,8 @@ position = Vector2(0, -120)
 points = PackedVector2Array(0, 0, 0, 60)
 
 [node name="NonRotate" type="Node2D" parent="."]
+
+[node name="Area2D" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+shape = SubResource("RectangleShape2D_ixgy7")

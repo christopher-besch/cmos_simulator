@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=3 uid="uid://ova6ietocig6"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_5porg"]
+size = Vector2(1, 1)
+
+[sub_resource type="QuadMesh" id="QuadMesh_1gmny"]
+
+[node name="Area2D" type="Area2D"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_5porg")
+
+[node name="MeshInstance2D" type="MeshInstance2D" parent="."]
+mesh = SubResource("QuadMesh_1gmny")

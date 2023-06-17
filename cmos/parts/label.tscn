@@ -1,8 +1,11 @@
-[gd_scene load_steps=4 format=3 uid="uid://drau6kelyyeki"]
+[gd_scene load_steps=5 format=3 uid="uid://drau6kelyyeki"]
 
 [ext_resource type="Texture2D" uid="uid://dgg0n1i5rofys" path="res://parts/label.png" id="1_b70yh"]
 [ext_resource type="PackedScene" uid="uid://dyolp4r4yncx5" path="res://cable.tscn" id="2_iy8f0"]
 [ext_resource type="LabelSettings" uid="uid://kquchrpb673w" path="res://label_text.tres" id="3_ejmdj"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_y826l"]
+size = Vector2(116, 57)
 
 [node name="Label" type="Part"]
 type = 4
@@ -25,7 +28,14 @@ position = Vector2(32, -9)
 [node name="Label" type="Label" parent="NonRotate/LabelContainer"]
 offset_left = -9.0
 offset_top = -14.0
-offset_right = 51.0
-offset_bottom = 26.0
+offset_right = 65.0
+offset_bottom = 34.0
 text = "a"
 label_settings = ExtResource("3_ejmdj")
+clip_text = true
+
+[node name="Area2D" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+position = Vector2(42, -0.5)
+shape = SubResource("RectangleShape2D_y826l")

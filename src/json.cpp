@@ -50,8 +50,8 @@ String Circuit::to_json() const
         {
             Cable* cable = Object::cast_to<Cable>(children[i]);
             if(cable && !cable->for_part) {
-                Vector2i pos0 = cable->to_global(cable->get_point_position(0)).round();
-                Vector2i pos1 = cable->to_global(cable->get_point_position(1)).round();
+                Vector2i pos0 = cable->get_global_a();
+                Vector2i pos1 = cable->get_global_b();
                 cables.push_back(nlohmann::json {
                     {"x0", pos0.x},
                     {"y0", pos0.y},

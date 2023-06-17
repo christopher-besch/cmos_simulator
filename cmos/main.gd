@@ -15,6 +15,8 @@ var nmos_scene = preload("res://parts/nmos.tscn");
 var pmos_scene = preload("res://parts/pmos.tscn");
 @onready
 var label_scene = preload("res://parts/label.tscn");
+@onready
+var select_area_scene = preload("res://select_area.tscn");
 
 func set_move():
 	circuit.tool = 0
@@ -46,7 +48,14 @@ func trace_circuit_btn():
 	circuit.trace_circuit()
 
 func _ready():
-	circuit.set_scenes(cable_scene, nmos_scene, pmos_scene, gnd_scene, label_scene)
+	circuit.set_scenes(
+		cable_scene,
+		nmos_scene,
+		pmos_scene,
+		gnd_scene,
+		label_scene,
+		select_area_scene
+	)
 	
 	get_node("MoveButton").connect("pressed", set_move)
 	get_node("DeleteButton").connect("pressed", set_delete)
